@@ -1,7 +1,7 @@
 (function() {
-    $(function() {
-        selectImagesWithAltTag("ole\\' crazy-eyes");
-    });
+
+    $(shuffleSrcs);
+    
     // Set 0: Selectors.
     
     /**
@@ -69,7 +69,18 @@
      * Hint: http://learn.jquery.com/using-jquery-core/working-with-selections/
      */
     function shuffleSrcs() {
-        
+        const images = $(".selection-images img");
+        const srcs = [];
+        $.each(images, function(index, value) {
+            srcs[index] = $(value).attr("src");
+        })
+        $.each(images, function(index, value) {
+            if (srcs[index - 1]) {
+                $(value).attr("src", srcs[index - 1]);
+            } else {
+                $(value).attr("src", srcs[srcs.length - 1]);
+            }
+        })
     }
     
     /**
