@@ -1,5 +1,5 @@
 (function() {
-    $(selectAllImages);
+    $(selectFirstImage);
     // Set 0: Selectors.
     
     /**
@@ -26,7 +26,10 @@
      * Hint: https://api.jquery.com/eq/
      */
     function selectFirstImage() {
-        
+        // $(".selection-images img:first").addClass("selected");
+        // $(".selection-images img:eq(0)").addClass("selected");
+        // $(".selection-images img").eq(0).addClass("selected");
+        $(".selection-images img").filter(":eq(0)").addClass("selected");
     }
     
     /**
