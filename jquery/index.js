@@ -1,7 +1,7 @@
 
 (function() {
 
-    $(setUpNamesEvents);
+    $(setUpMousemoveEvents);
     
     // Set 0: Selectors.
     
@@ -204,7 +204,11 @@
      * Hint: https://api.jquery.com/event.pageY/
      */
     function setUpMousemoveEvents() {
-        
+        // Look at my horse. My horse is amazing!
+        $("body").mousemove(function(event) {
+            $("span.mouse-x").text(event.pageX);
+            $("span.mouse-y").text(event.pageY);
+        })
     }
     
     /**
