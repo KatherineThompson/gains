@@ -1,6 +1,6 @@
 (function() {
 
-    $(selectImageOnClickOnce);
+    $(setUpTableEvents);
     
     // Set 0: Selectors.
     
@@ -145,7 +145,23 @@
      * Hint: http://learn.jquery.com/events/event-basics/#setting-up-multiple-event-responses 
      */
     function setUpTableEvents() {
-        
+        let click = 0;
+        let mousemove = 0;
+        let mouseout = 0;
+        $("table").on({
+            click: function() {
+                click++;
+                $("tbody tr:eq(0) td:eq(1)").text(click);
+            },
+            mousemove: function() {
+                mousemove++;
+                $("tbody tr:eq(1) td:eq(1)").text(mousemove);
+            },
+            mouseleave: function() {
+                mouseout++;
+                $("tbody tr:eq(2) td:eq(1)").text(mouseout);
+            }
+        });
     }
     
     /**
