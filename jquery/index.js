@@ -1,7 +1,7 @@
 
 (function() {
-
-    $(setUpMousemoveEvents);
+    $(setUpTableEvents);
+    $(setUpTriggers);
     
     // Set 0: Selectors.
     
@@ -221,6 +221,14 @@
      * Hint: https://api.jquery.com/trigger/
      */
     function setUpTriggers() {
-        
+        $(".events-trigger button").eq(0).click(function() {
+            $("table").trigger("click");
+        })
+        $(".events-trigger button").eq(1).click(function() {
+            $("table").trigger("mousemove");
+        })
+        $(".events-trigger button").eq(2).click(function() {
+            $("table").trigger("mouseout");
+        })
     }
 })();
