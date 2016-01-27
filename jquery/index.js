@@ -1,6 +1,6 @@
 (function() {
 
-    $(selectImageOnClick);
+    $(selectImageOnClickOnce);
     
     // Set 0: Selectors.
     
@@ -123,7 +123,13 @@
      * Hint: http://learn.jquery.com/events/event-basics/#tearing-down-event-listeners
      */
     function selectImageOnClickOnce() {
-        
+        const images = $(".selection-images img");
+        $.each(images, function(index, image) {
+            $(image).click(function() {
+                $(image).addClass("selected");
+                $(image).off("click");
+            })
+        })
     }
     
     /**
