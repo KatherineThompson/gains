@@ -1,6 +1,6 @@
 (function() {
 
-    $(shuffleSrcs);
+    $(selectImageOnClick);
     
     // Set 0: Selectors.
     
@@ -71,14 +71,14 @@
     function shuffleSrcs() {
         const images = $(".selection-images img");
         const srcs = [];
-        $.each(images, function(index, value) {
-            srcs[index] = $(value).attr("src");
+        $.each(images, function(index, image) {
+            srcs[index] = $(image).attr("src");
         })
-        $.each(images, function(index, value) {
+        $.each(images, function(index, image) {
             if (srcs[index - 1]) {
-                $(value).attr("src", srcs[index - 1]);
+                $(image).attr("src", srcs[index - 1]);
             } else {
-                $(value).attr("src", srcs[srcs.length - 1]);
+                $(image).attr("src", srcs[srcs.length - 1]);
             }
         })
     }
@@ -103,7 +103,15 @@
      * Hint: http://learn.jquery.com/events/event-basics/#setting-up-event-responses-on-dom-elements
      */
     function selectImageOnClick() {
-        
+        // $(".selection-images img").click(function(){
+        //     $(this).addClass("selected");
+        // })
+        const images = $(".selection-images img");
+        $.each(images, function(index, image) {
+            $(image).click(function() {
+                $(image).addClass("selected");
+            })
+        })
     }
     
     /**
