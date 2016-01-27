@@ -1,5 +1,5 @@
 (function() {
-    
+    $(selectAllImages);
     // Set 0: Selectors.
     
     /**
@@ -13,7 +13,7 @@
      * Hint: http://api.jquery.com/category/selectors/
      */
     function selectAllImages() {
-        
+        $(".selection-images img").addClass("selected");
     }
     
     /**
