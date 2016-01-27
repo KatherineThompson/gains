@@ -1,3 +1,11 @@
 .selected {
     border: 15px forestgreen solid;
 }
+
+.row {
+    margin-bottom: 2%;
+}
+
+.most-recently-clicked, .mouse-x, .mouse-y {
+    color: peru
+}

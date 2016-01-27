@@ -1,4 +1,7 @@
 (function() {
+    
+    // Set 0: Selectors.
+    
     /**
      * Problem 1: Write a function that selects all the images in the .selection-images div.
      * (All following problems refer to the .selection-images div unless otherwise specified.)
@@ -60,6 +63,107 @@
      * Hint: http://learn.jquery.com/using-jquery-core/working-with-selections/
      */
     function shuffleSrcs() {
+        
+    }
+    
+    /**
+     * Set 1: Events
+     * 
+     * In browser programming, events are a central part of your application,
+     * since you're probably spending most of your time responding to user input.
+     * jQuery provides a number of utilities to manage events.
+     * 
+     * http://learn.jquery.com/events/
+     * http://learn.jquery.com/events/introduction-to-events/
+     * https://api.jquery.com/category/events/
+     */
+    
+    /**
+     * Problem 1: Write a function that adds the .selected class to an image when the image is clicked.
+     * 
+     * Hint: Use $('selector').click(function() { }) to set up a click handler.
+     * Hint: https://api.jquery.com/click/
+     * Hint: http://learn.jquery.com/events/event-basics/#setting-up-event-responses-on-dom-elements
+     */
+    function selectImageOnClick() {
+        
+    }
+    
+    /**
+     * Problem 1: Write a function that adds the .selected class to an image when the image is clicked,
+     * only the first time but not subsequent times the image is clicked.
+     *
+     * Hint: Use $('selector').off('eventName') to remove event listeners from an event. 
+     * Hint: https://api.jquery.com/off/
+     * Hint: http://learn.jquery.com/events/event-basics/#tearing-down-event-listeners
+     */
+    function selectImageOnClickOnce() {
+        
+    }
+    
+    /**
+     * Problem 2: In the .events div there is a table. Each row of this table contains an event 
+     * name. Write a function that sets up handlers such that the cell in the "Count" column 
+     * is the number of times that event has occurred on the table.
+     *
+     * Hint: Use $('selector').text(newVal) to set the text of all selected elements.
+     * Hint: http://api.jquery.com/text/
+     * Hint: You may wish to have some variables in this function to keep track of how many times
+     *       each event has fired.
+     * Hint: If you want to get fancy, you can set up multiple event handlers with a single .on() call
+     * Hint: http://learn.jquery.com/events/event-basics/#setting-up-multiple-event-responses 
+     */
+    function setUpTableEvents() {
+        
+    }
+    
+    /**
+     * Problem 3: In the .events-names div there is a list of names. There is also a span with class
+     * .most-recently-clicked. Write a function that inserts the most recently clicked name into 
+     * that span.
+     * 
+     * Hint: Use $('selector').text(newVal) to set the text of all selected elements.
+     * Hint: Use $('selector').text() to get the text of the first of the selected elements.
+     * Hint: In an event handler, use event.target to see the element that triggered the event.
+     *       (Just for fun, check out the event object to see what else you get on it!)
+     * 
+     *       For example:
+     *          $('p').click(function(event) {
+     *              $(event.target).attr('id') // get the id attribute of the clicked element.
+     *          })
+     * Hint: https://api.jquery.com/event.target/
+     * Hint: http://learn.jquery.com/events/inside-event-handling-function/
+     */
+    function setUpNamesEvents() {
+        
+    }
+    
+    /**
+     * Problem 4: In the .events-coordinates div, there is are some spans showing where the most
+     * recent mousemove event was. Add a mousemove listener to the entire page that updates
+     * these spans with the most recent values.
+     * 
+     * Hint: I don't know but I think you'll find that 'body' covers pretty much everything.
+     * Hint: In an event handler, use event.pageX and event.pageY to get the coordinates of where
+     *       the event occurred.
+     * Hint: http://learn.jquery.com/events/inside-event-handling-function/
+     * Hint: https://api.jquery.com/event.pageX/
+     * Hint: https://api.jquery.com/event.pageY/
+     */
+    function setUpMousemoveEvents() {
+        
+    }
+    
+    /**
+     * Problem 5: In the .events-triggers div, there are three buttons. Each button contains the name
+     * of an event that was referenced in the table in an earlier problem. Wire up event handlers
+     * such that clicking a button manually triggers that event on the table.
+     * 
+     * Hint: Use $('selector').trigger('eventName') to manually execute handlers for the selected elements.
+     * Hint: http://learn.jquery.com/events/triggering-event-handlers/
+     * Hint: https://api.jquery.com/trigger/
+     */
+    function setUpTriggers() {
         
     }
 })();
