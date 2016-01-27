@@ -1,5 +1,7 @@
 (function() {
-    $(selectImagesAfterFirst);
+    $(function() {
+        selectImagesWithAltTag("ole\\' crazy-eyes");
+    });
     // Set 0: Selectors.
     
     /**
@@ -50,7 +52,7 @@
      * Hint: http://learn.jquery.com/using-jquery-core/selecting-elements/#selecting-elements-by-attribute
      */
     function selectImagesWithAltTag(altTag) {
-
+        $(".selection-images img[alt='" + altTag + "']").addClass("selected");
     }
     
     /**
