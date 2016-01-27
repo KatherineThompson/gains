@@ -1,6 +1,7 @@
+
 (function() {
 
-    $(setUpTableEvents);
+    $(setUpNamesEvents);
     
     // Set 0: Selectors.
     
@@ -182,7 +183,12 @@
      * Hint: http://learn.jquery.com/events/inside-event-handling-function/
      */
     function setUpNamesEvents() {
-        
+        const names = $("ul li");
+        $.each(names, function(index, name) {
+            $(name).click(function() {
+                $("span.most-recently-clicked").text($(name).text());
+            });
+        })
     }
     
     /**
