@@ -1,5 +1,5 @@
 (function() {
-    $(selectFirstImage);
+    $(selectImagesAfterFirst);
     // Set 0: Selectors.
     
     /**
@@ -39,7 +39,8 @@
      * Hint: http://learn.jquery.com/using-jquery-core/selecting-elements/#pseudo-selectors
      */
     function selectImagesAfterFirst() {
-        
+        // $(".selection-images img:gt(0)").addClass("selected");
+        $(".selection-images img").filter(":gt(0)").addClass("selected");
     }
     
     /**
@@ -49,7 +50,7 @@
      * Hint: http://learn.jquery.com/using-jquery-core/selecting-elements/#selecting-elements-by-attribute
      */
     function selectImagesWithAltTag(altTag) {
-        
+
     }
     
     /**
