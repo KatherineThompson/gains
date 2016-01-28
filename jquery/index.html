@@ -18,6 +18,7 @@
   <script src="./index.js"></script>
   <script src="./manipulation.js"></script>
   <script src="./effects.js"></script>
+  <script src="./ajax.js"></script>
   <link rel="stylesheet" href="./foundation.css" />
   <link rel="stylesheet" href="./index.css" />
 </head>
@@ -222,6 +223,57 @@
         </div>
     </div>
     
+    <div class="row">
+        <h2 class="small-12 columns">Data</h2>
+    </div>
+    
+    <div class="row ajax-form">
+        <div class="small-1 columns">
+            <button class="button primary">GO</button>
+        </div>
+        <div class="small-3 columns">
+            <label>Request path</label>
+            <input type="text" />
+        </div>
+        <div class="small-3 columns">
+            <label>Request data</label>
+            <input type="text" />
+        </div>
+        <div class="small-1 columns">
+            <label>Request method</label>
+            <select>
+                <option>GET</option>
+                <option>POST</option>
+                <option>HEAD</option>
+            </select>
+        </div>
+        <div class="small-3 columns">
+            <label>Custom request header key</label>
+            <input type="text" />
+            
+            <label>Custom request header value</label>
+            <input type="text" />
+        </div>
+    </div>
+    
+    <div class="row ajax-response">
+        <div class="small-6 columns">
+            <h3>Response Body</h3>
+            <div class="data-response">
+                <p>No response yet</p>
+            </div>
+        </div>
+        <div class="small-6 columns">
+            <h3>Response Headers</h3>
+            <table class="data-response-headers">
+                <thead>
+                    <tr>
+                        <th>Header Name</th><th>Header Value</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
     
 </body>
 </html>

@@ -20,3 +20,8 @@
     background-color: darkgreen;
     border-radius: 100%;
 }
+
+.data-response {
+    border: 1px deepskyblue solid;
+    padding: 10%;
+}
