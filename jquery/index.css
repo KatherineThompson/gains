@@ -14,8 +14,9 @@
     width: 100px;
 }
 
-.colored-box {
+.colored-shape {
     width: 100px;
     height: 100px;
     background-color: darkgreen;
+    border-radius: 100%;
 }
