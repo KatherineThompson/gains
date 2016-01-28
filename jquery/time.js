@@ -65,4 +65,40 @@
     function displayManyImagesWithStop() {
         
     }
+    
+    /**
+     * Problem 4: In the .click-times div, there is a button.
+     * When the button is clicked, record the time at
+     * which that event occurred by adding a new <li>
+     * to the .timings <ul>.
+     * 
+     * You can use `new Date()` to get an object representing
+     * a date and time in JS. It will be initialized to the
+     * current time when you called the constructor.
+     * 
+     * You can use various methods on the date object to format
+     * the date as a nicely human readable string. Many of 
+     * those methods have a name of the form .to*String(),
+     * where * is replaced with a descriptive name. Play around
+     * in the console to see what is available.
+     * 
+     * You can also use the getters to get specific fields, like
+     * dateObj.getYear() or .getMonth() or .getMinute(). You can
+     * make your own format in this way.
+     */
+    function recordClickTimes() {
+        
+    }
+    
+    /**
+     * Problem 5: Take the solution above, and expand it to
+     * display both the time of the click and the time *since*
+     * the previous click.
+     * 
+     * If you have multiple Date objects, you can compare them
+     * to see how much time has passed between them.
+     */
+    function recordClickAndOffset() {
+        
+    }
 })();
