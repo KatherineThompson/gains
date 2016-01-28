@@ -1,7 +1,33 @@
+"use strict";
 
 (function() {
-    $(setUpTableEvents);
-    $(setUpTriggers);
+    $(useSavedImages);
+    // $(toggleSelectOnClick);
+    $(selectImageOnClickOnce);
+
+    
+    function useSavedImages() {
+        $("img").each(function(index, image) {
+            const currentSrc = $(image).attr("src");
+            const slicedSrc = currentSrc.slice(currentSrc.lastIndexOf("/"));
+            const newSrc = "./images" + slicedSrc;
+            $(image).attr("src", newSrc);
+        })
+    }
+    
+    function toggleSelectOnClick() {
+        // $(".selection-images img").click(function(){
+        //     $(event.target).addClass("selected");
+        //     $(event.target).click(function() {
+        //         $(event.target).removeClass("selected");
+        //         toggleSelectOnClick(event.target);
+        //     })
+        // })
+        $(".selection-images img").click(function() {
+            $(event.target).toggleClass("selected");
+        })
+    }
+    
     
     // Set 0: Selectors.
     
@@ -104,15 +130,15 @@
      * Hint: http://learn.jquery.com/events/event-basics/#setting-up-event-responses-on-dom-elements
      */
     function selectImageOnClick() {
-        // $(".selection-images img").click(function(){
-        //     $(this).addClass("selected");
-        // })
-        const images = $(".selection-images img");
-        $.each(images, function(index, image) {
-            $(image).click(function() {
-                $(image).addClass("selected");
-            })
+        $(".selection-images img").click(function(){
+            $(event.target).addClass("selected");
         })
+        // const images = $(".selection-images img");
+        // $.each(images, function(index, image) {
+        //     $(image).click(function() {
+        //         $(image).addClass("selected");
+        //     })
+        // })
     }
     
     /**
@@ -124,12 +150,16 @@
      * Hint: http://learn.jquery.com/events/event-basics/#tearing-down-event-listeners
      */
     function selectImageOnClickOnce() {
-        const images = $(".selection-images img");
-        $.each(images, function(index, image) {
-            $(image).click(function() {
-                $(image).addClass("selected");
-                $(image).off("click");
-            })
+        // const images = $(".selection-images img");
+        // $.each(images, function(index, image) {
+        //     $(image).click(function() {
+        //         $(image).addClass("selected");
+        //         $(image).off("click");
+        //     })
+        // })
+        $(".selection-images img").click(function() {
+            $(event.target).addClass("selected");
+            $(event.target).off("click");            
         })
     }
     
@@ -146,21 +176,21 @@
      * Hint: http://learn.jquery.com/events/event-basics/#setting-up-multiple-event-responses 
      */
     function setUpTableEvents() {
-        let click = 0;
-        let mousemove = 0;
-        let mouseout = 0;
+        let clickCount = 0;
+        let mousemoveCount = 0;
+        let mouseoutCount = 0;
         $("table").on({
             click: function() {
-                click++;
-                $("tbody tr:eq(0) td:eq(1)").text(click);
+                clickCount++;
+                $("tbody tr:eq(0) td:eq(1)").text(clickCount);
             },
             mousemove: function() {
-                mousemove++;
-                $("tbody tr:eq(1) td:eq(1)").text(mousemove);
+                mousemoveCount++;
+                $("tbody tr:eq(1) td:eq(1)").text(mousemoveCount);
             },
             mouseleave: function() {
-                mouseout++;
-                $("tbody tr:eq(2) td:eq(1)").text(mouseout);
+                mouseoutCount++;
+                $("tbody tr:eq(2) td:eq(1)").text(mouseoutCount);
             }
         });
     }
