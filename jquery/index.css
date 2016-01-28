@@ -9,3 +9,7 @@
 .most-recently-clicked, .mouse-x, .mouse-y {
     color: peru
 }
+
+.nice-things img {
+    width: 100px;
+}

@@ -66,4 +66,21 @@
     function fillDomPropertiesTable() {
         
     }
+    
+    /**
+     * Problem 5: There are images in the .nice-things div. When any
+     * two of those images are clicked, swap them.
+     */
+    function swapImagesOnClick() {
+        
+    }
+    
+    /**
+     * Problem 6: There are three paragraphs in the .wrap div. 
+     * Wrap them in a <div class="small-4 columns"> element so 
+     * they line up correctly in the grid.
+     */
+    function wrapParagraphsInColumnDiv() {
+        
+    }
 })();
