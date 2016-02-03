@@ -5,6 +5,7 @@
     $(function() {
         insertNames(names);
     });
+    $(duplicateElement);
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
     // This is the basis of much of the interactivity it provides.
@@ -45,7 +46,9 @@
      *      <p>click me</p>
      */
     function duplicateElement() {
-        
+        $(".duplication").click(function() {
+            $(event.target).clone().insertAfter(event.target);
+        })
     }
     
     /**
