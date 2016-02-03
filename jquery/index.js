@@ -3,7 +3,7 @@
 (function() {
     $(useSavedImages);
     // $(toggleSelectOnClick);
-    $(selectImageOnClickOnce);
+
 
     
     function useSavedImages() {

@@ -1,4 +1,10 @@
+"use strict";
+
 (function() {
+    const names = ["Plumper", "bigFootChester", "Stella", "Potato"];
+    $(function() {
+        insertNames(names);
+    });
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
     // This is the basis of much of the interactivity it provides.
@@ -16,7 +22,11 @@
      *      $('<p>hi</p>');
      */
     function insertNames(names) {
-        
+        $(names).each(function(index, name) {
+            // $(".names ul").after("<li>" + name + "</li>");
+            // names end up in reverse order because each new one is put after the ul element
+            $(".names ul").append("<li>" + name + "</li>");
+        })
     }
     
     /**
