@@ -6,6 +6,7 @@
         insertNames(names);
     });
     $(duplicateElement);
+    $(toggleButtonSuccess);
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
     // This is the basis of much of the interactivity it provides.
@@ -60,7 +61,9 @@
      * have that class removed, and vice versa.
      */
     function toggleButtonSuccess() {
-        
+        $(".toggle-buttons button").click(function() {
+            $(".toggle-buttons button").toggleClass("success");
+        })
     }
     
     /**
