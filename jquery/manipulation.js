@@ -10,6 +10,7 @@
     $(addClickCountToButton);
     $(fillDomPropertiesTable);
     $(swapImagesOnClick);
+    $(wrapParagraphsInColumnDiv);
     
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
@@ -133,6 +134,6 @@
      * they line up correctly in the grid.
      */
     function wrapParagraphsInColumnDiv() {
-        
+        $(".wrap p").wrapAll("<div class='small-4 columns' />");
     }
 })();
