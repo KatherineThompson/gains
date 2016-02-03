@@ -7,6 +7,8 @@
     });
     $(duplicateElement);
     $(toggleButtonSuccess);
+    $(addClickCountToButton);
+    
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
     // This is the basis of much of the interactivity it provides.
@@ -72,7 +74,14 @@
      * it has been clicked. Start the number at 0.
      */
     function addClickCountToButton() {
-        
+        $(".toggle-buttons button").each(function(index, button) {
+            $(button).text(0);
+            $(button).click(function() {
+                let numClicks = $(button).text();
+                numClicks = parseInt(numClicks, 10);
+                $(button).text(numClicks + 1);
+            })
+        })
     }
     
     /**
