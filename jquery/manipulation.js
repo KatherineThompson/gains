@@ -9,6 +9,7 @@
     $(toggleButtonSuccess);
     $(addClickCountToButton);
     $(fillDomPropertiesTable);
+    $(swapImagesOnClick);
     
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
@@ -109,7 +110,21 @@
      * two of those images are clicked, swap them.
      */
     function swapImagesOnClick() {
-        
+        $(".nice-things img").click(function() {
+            if($(".nice-things img").hasClass("clicked")) {
+                const first = $(".nice-things img.clicked");
+                const firstSrc = first.attr("src");
+                const second = $(event.target);
+                const secondSrc = second.attr("src");
+                
+                first.attr("src", secondSrc);
+                second.attr("src", firstSrc);
+                
+                $(".nice-things img").removeClass("clicked");
+            } else {
+                $(event.target).addClass("clicked");
+            }
+        })
     }
     
     /**
