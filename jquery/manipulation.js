@@ -8,6 +8,7 @@
     $(duplicateElement);
     $(toggleButtonSuccess);
     $(addClickCountToButton);
+    $(fillDomPropertiesTable);
     
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
@@ -89,7 +90,18 @@
      * values for the table itself.
      */
     function fillDomPropertiesTable() {
-        
+        const table = $(".dom-properties");
+        const height = table.height();
+        $(".dom-properties tbody tr:eq(0) td").filter(":eq(1)").text(height);
+        const width = table.width();
+        $(".dom-properties tbody tr:eq(1) td").filter(":eq(1)").text(width);
+        const innerHeight = table.innerHeight();
+        $(".dom-properties tbody tr:eq(2) td").filter(":eq(1)").text(innerHeight);
+        const innerWidth = table.innerWidth();
+        $(".dom-properties tbody tr:eq(3) td").filter(":eq(1)").text(innerWidth);
+        const offsetLeft = table.offset().left;
+        const offsetTop = table.offset().top;
+        $(".dom-properties tbody tr:eq(4) td").filter(":eq(1)").text("left: " + offsetLeft + ", top: " + offsetTop);
     }
     
     /**
