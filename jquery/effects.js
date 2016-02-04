@@ -6,7 +6,7 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(animateImageSrcChangeOnClick);
+    $(hideAndShowImageOnClick);
     
     /**
      * Problem 0: Set up an event handler that will
@@ -78,7 +78,16 @@
      * again with another animation.
      */
     function hideAndShowImageOnClick() {
-        
+        $(".nice-things img").click(function() {
+            const img = $(event.target);
+            $(img).animate({
+                opacity: 0                
+            }, 1000)
+            .delay(1000)
+            .animate({
+                opacity: 1
+            }, 1000);
+        });
     }
     
     /**
