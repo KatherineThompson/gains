@@ -7,6 +7,7 @@
     // http://learn.jquery.com/effects/
     
     $(hideAndShowImageOnClick);
+    $(animateCircleOpacity);
     
     /**
      * Problem 0: Set up an event handler that will
@@ -97,6 +98,12 @@
      * opacity selected by the slider.
      */
     function animateCircleOpacity() {
-        
+        $("button.primary").click(function() {
+            debugger;
+            const rangeVal = $(".color-picker input").val() / 100;
+            $(".colored-shape").animate({
+                opacity: rangeVal
+            });
+        })
     }
 })();
