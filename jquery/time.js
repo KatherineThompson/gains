@@ -1,3 +1,5 @@
+"use strict";
+
 (function() {
     // Set 5: Time
     //
@@ -19,7 +21,7 @@
      *      }, 500);
      */
     
-    $(getRandomImageOnClick);
+    $(getRandomImageOnClickCustomTimer);
     
     function getRandomImageOnClick() {
         const sources = [];
@@ -44,7 +46,22 @@
      * customize the wait time using the input.
      */
     function getRandomImageOnClickCustomTimer() {
-        
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        })
+        $(".delayed-image button").click(function() {
+            let waitTime = $(".delayed-image input").val()
+            setTimeout(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                if ($(".delayed-image .image-target").children().length > 0) {
+                } else {
+                    $(".delayed-image .image-target").append("<img />")
+                }
+                $(".delayed-image .image-target img").attr("src", newSource);
+            }, waitTime);
+        })
     }
     
     /**
