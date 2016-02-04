@@ -6,7 +6,7 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(animateParagraphTextChangeOnClick);
+    $(animateImageSrcChangeOnClick);
     
     /**
      * Problem 0: Set up an event handler that will
@@ -55,7 +55,21 @@
      * animation.
      */
     function animateImageSrcChangeOnClick() {
+        const srcs = [];
         
+        $(".nice-things img").each(function(index, image) {
+            srcs.push($(image).attr("src"));
+        })
+        
+        $(".nice-things img").click(function() {
+            const image = $(event.target);
+            const newSrc = srcs[Math.floor(Math.random()*6)];
+            $(image).slideUp();
+            setTimeout(function() {
+                $(image).attr("src", newSrc);
+                $(image).fadeIn();
+            }, 1000);
+        })     
     }
     
     /**
