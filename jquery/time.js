@@ -18,8 +18,25 @@
      *          // do something in the future
      *      }, 500);
      */
+    
+    $(getRandomImageOnClick);
+    
     function getRandomImageOnClick() {
-        
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        })
+        $(".delayed-image button").click(function() {
+            setTimeout(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                if ($(".delayed-image .image-target").children().length > 0) {
+                } else {
+                    $(".delayed-image .image-target").append("<img />")
+                }
+                $(".delayed-image .image-target img").attr("src", newSource);
+            }, 1000);
+        })
     }
     
     /**
