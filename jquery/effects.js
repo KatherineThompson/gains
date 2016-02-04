@@ -6,7 +6,7 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(hideParagraphsOnClick);
+    $(fadeOutParagraphsOnClick);
     
     /**
      * Problem 0: Set up an event handler that will
@@ -23,7 +23,9 @@
      * slowly fade out any paragraph when it is clicked.
      */
     function fadeOutParagraphsOnClick() {
-        
+        $("p").click(function() {
+            $(event.target).fadeOut("slow");
+        })
     }
     
     /**
