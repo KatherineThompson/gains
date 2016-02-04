@@ -77,4 +77,17 @@
      * hide it with some animation, wait one second, then show it
      * again with another animation.
      */
+    function hideAndShowImageOnClick() {
+        
+    }
+    
+    /**
+     * Problem 5: In the .color-picker div, there is a colored circle
+     * and one sliders controlling the opacity of that circle. When the 
+     * GO button is clicked, animate the colored circle to have the
+     * opacity selected by the slider.
+     */
+    function animateCircleOpacity() {
+        
+    }
 })();

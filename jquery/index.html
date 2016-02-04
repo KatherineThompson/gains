@@ -13,6 +13,7 @@
         You're looking for a link that looks something like the CDN link we're 
         using for Foundation below.
   -->
+
   <script src="./jquery-2.2.0.js"></script>
 
   <script src="./index.js"></script>
@@ -20,6 +21,10 @@
   <script src="./effects.js"></script>
   <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.css" />-->
   <link rel="stylesheet" href="./foundation-6/css/foundation.css" />
+  
+  <script src="./ajax.js"></script>
+  <script src="./time.js"></script>
+
   <link rel="stylesheet" href="./index.css" />
 </head>
 <body>
@@ -209,13 +214,109 @@
         <h2 class="small-12 columns">Animation</h2>
     </div>
     
-    <div class="row">
-        <div class="small-12 columns">
-            <div class="colored-box">
+    <div class="row color-picker">
+        <div class="small-4 columns">
+            <div class="colored-shape">
             </div>
+        </div>
+        <div class="small-4 columns">
+            <label>Opacity</label>
+            <input type="range" />
+        </div>
+        <div class="small-4 columns">
+            <button class="button primary">GO</button>
         </div>
     </div>
     
+    <div class="row">
+        <h2 class="small-12 columns">Data</h2>
+    </div>
+    
+    <div class="row ajax-form">
+        <div class="small-1 columns">
+            <button class="button primary">GO</button>
+        </div>
+        <div class="small-3 columns">
+            <label>Request path</label>
+            <input type="text" />
+        </div>
+        <div class="small-3 columns">
+            <label>Request data</label>
+            <input type="text" />
+        </div>
+        <div class="small-1 columns">
+            <label>Request method</label>
+            <select>
+                <option>GET</option>
+                <option>POST</option>
+                <option>HEAD</option>
+            </select>
+        </div>
+        <div class="small-3 columns">
+            <label>Custom request header key</label>
+            <input type="text" />
+            
+            <label>Custom request header value</label>
+            <input type="text" />
+        </div>
+    </div>
+    
+    <div class="row ajax-response">
+        <div class="small-6 columns">
+            <h3>Response Body</h3>
+            <div class="data-response">
+                <p>No response yet</p>
+            </div>
+        </div>
+        <div class="small-6 columns">
+            <h3>Response Headers</h3>
+            <table class="data-response-headers">
+                <thead>
+                    <tr>
+                        <th>Header Name</th><th>Header Value</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    
+    <div class="row">
+        <h2 class="small-12 columns">Time</h2>
+    </div>
+    
+    <div class="row delayed-image">
+        <div class="small-3 columns">
+            <button class="primary button">Get me an image</button>    
+        </div>
+        <div class="small-3 columns">
+            <label>Milliseconds to wait</label>
+            <input type="number" />       
+        </div>
+        <div class="small-6 columns image-target">
+        </div>
+    </div>
+    
+    <div class="row many-images">
+        <div class="small-3 columns">
+            <button class="primary button">Get me many images</button>    
+        </div>
+        <div class="small-3 columns">
+            <label>Milliseconds to wait between images</label>
+            <input type="number" />       
+        </div>
+        <div class="small-6 columns image-target">
+        </div>
+    </div>
+    
+    <div class="row click-times">
+        <div class="small-6 columns">
+            <button class="primary button">Add timing</button>
+        </div>
+        <div class="small-6 columns">
+            <ul class="timings">
+            </ul>
+        </div>
+    </div>
     
 </body>
 </html>
