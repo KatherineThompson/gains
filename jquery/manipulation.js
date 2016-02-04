@@ -5,12 +5,12 @@
     $(function() {
         insertNames(names);
     });
-    $(duplicateElement);
-    $(toggleButtonSuccess);
-    $(addClickCountToButton);
-    $(fillDomPropertiesTable);
-    $(swapImagesOnClick);
-    $(wrapParagraphsInColumnDiv);
+    // $(duplicateElement);
+    // $(toggleButtonSuccess);
+    // $(addClickCountToButton);
+    // $(fillDomPropertiesTable);
+    // $(swapImagesOnClick);
+    // $(wrapParagraphsInColumnDiv);
     
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.

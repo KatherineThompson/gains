@@ -6,7 +6,7 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(fadeOutParagraphsOnClick);
+    $(animateParagraphTextChangeOnClick);
     
     /**
      * Problem 0: Set up an event handler that will
@@ -38,7 +38,13 @@
      *      3. Quickly fade the paragraph back in
      */
     function animateParagraphTextChangeOnClick() {
-        
+        $("p").click(function() {
+            const paragraph = $(event.target);
+            paragraph.fadeOut("slow");
+            setTimeout(function() {
+                $(paragraph).text("jimmy whisper").fadeIn("fast");
+            }, 700);
+        })
     }
     
     /**
