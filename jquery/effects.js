@@ -6,12 +6,16 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
+    $(hideParagraphsOnClick);
+    
     /**
      * Problem 0: Set up an event handler that will
      * hide any paragraph when it is clicked.
-     */
+     */    
     function hideParagraphsOnClick() {
-        
+        $("p").click(function() {
+            $(event.target).hide();
+        })
     }
     
     /**
