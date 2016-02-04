@@ -98,8 +98,7 @@
      * opacity selected by the slider.
      */
     function animateCircleOpacity() {
-        $("button.primary").click(function() {
-            debugger;
+        $(".color-pickerbutton.primary").click(function() {
             const rangeVal = $(".color-picker input").val() / 100;
             $(".colored-shape").animate({
                 opacity: rangeVal
