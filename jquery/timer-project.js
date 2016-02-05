@@ -8,6 +8,8 @@
         controller = getController();
         
     controller.init(view, model);
+    
+    $(view.onTimerStart);
         
     function getView() {
         
@@ -17,7 +19,10 @@
          * and give it an `alert` class.
          */
         function onTimerStart(callback) {
-            
+            callback();
+            $("button.primary").click(function() {
+                $(event.target).text("Stop").addClass("alert");
+            })
         }
         
         /**
