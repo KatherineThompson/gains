@@ -23,6 +23,7 @@
     
     $(getRandomImageOnClickCustomTimer);
     $(displayManyImagesWithStop);
+    $(recordClickTimes);
     
     function getRandomImageOnClick() {
         const sources = [];
@@ -164,7 +165,11 @@
      * make your own format in this way.
      */
     function recordClickTimes() {
-        
+        $(".click-times button").click(function() {
+            const date = new Date;
+            const time = date.toTimeString();
+            $(".timings").append("<li>" + time + "</li>");
+        });
     }
     
     /**
@@ -176,6 +181,8 @@
      * to see how much time has passed between them.
      */
     function recordClickAndOffset() {
-        
+        $(".click-times button").click(function() {
+            const date = new Date;
+        });
     }
 })();
