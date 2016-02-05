@@ -129,16 +129,16 @@
                 $(".many-images .image-target img").last().attr("src", newSource);
             }, waitTime);
             
-            $(button).click(function() {
+            $(button).one("click", function() {
                 window.clearInterval(intervalID);
                 $(button).text("Get me many images").removeClass("alert");
-                $(button).click(function() {
+                $(button).one("click", function() {
                     startImageParade(button);
                 });
             });
         }
         
-        $(".many-images button").click(function() {
+        $(".many-images button").one("click", function() {
             startImageParade($(event.target));
         });
     }
