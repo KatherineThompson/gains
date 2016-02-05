@@ -22,6 +22,7 @@
      */
     
     $(getRandomImageOnClickCustomTimer);
+    $(displayManyImagesWithStop);
     
     function getRandomImageOnClick() {
         const sources = [];
@@ -51,13 +52,13 @@
             sources.push($(image).attr("src"));
         })
         $(".delayed-image button").click(function() {
-            let waitTime = $(".delayed-image input").val()
+            const waitTime = $(".delayed-image input").val()
             setTimeout(function() {
                 const index = Math.floor(Math.random() * sources.length);
                 const newSource = sources[index];
                 if ($(".delayed-image .image-target").children().length > 0) {
                 } else {
-                    $(".delayed-image .image-target").append("<img />")
+                    $(".delayed-image .image-target").append("<img />");
                 }
                 $(".delayed-image .image-target img").attr("src", newSource);
             }, waitTime);
@@ -77,7 +78,20 @@
      *      }, 1000);
      */
     function displayManyImages() {
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        });
         
+        $(".many-images button").click(function() {
+            const waitTime = $(".many-images input").val();
+            setInterval(function() {
+                let index = Math.floor(Math.random() * sources.length);
+                let newSource = sources[index];
+                $(".many-images .image-target").append("<img />");
+                $(".many-images .image-target img").last().attr("src", newSource);
+            }, waitTime);
+        })
     }
     
     /**
@@ -96,8 +110,37 @@
      * Then you can do something with id to cancel the interval,
      * but tbh I forget what it is.
      */
+           
     function displayManyImagesWithStop() {
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        });
         
+        let intervalID;
+                       
+        function startImageParade(button) {
+            $(button).text("Stop").addClass("alert");
+            const waitTime = $(".many-images input").val();
+            intervalID = window.setInterval(function() {
+                let index = Math.floor(Math.random() * sources.length);
+                let newSource = sources[index];
+                $(".many-images .image-target").append("<img />");
+                $(".many-images .image-target img").last().attr("src", newSource);
+            }, waitTime);
+            
+            $(button).click(function() {
+                window.clearInterval(intervalID);
+                $(button).text("Get me many images").removeClass("alert");
+                $(button).click(function() {
+                    startImageParade(button);
+                });
+            });
+        }
+        
+        $(".many-images button").click(function() {
+            startImageParade($(event.target));
+        });
     }
     
     /**
