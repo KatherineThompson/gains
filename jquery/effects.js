@@ -6,8 +6,9 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(hideAndShowImageOnClick);
+    $(animateImageSrcChangeOnClick);
     $(animateCircleOpacity);
+    $(animateParagraphTextChangeOnClick)
     
     /**
      * Problem 0: Set up an event handler that will
@@ -41,10 +42,9 @@
     function animateParagraphTextChangeOnClick() {
         $("p").click(function() {
             const paragraph = $(event.target);
-            paragraph.fadeOut("slow");
-            setTimeout(function() {
+            paragraph.fadeOut("slow", function() {
                 $(paragraph).text("jimmy whisper").fadeIn("fast");
-            }, 700);
+            });
         })
     }
     
@@ -65,11 +65,10 @@
         $(".nice-things img").click(function() {
             const image = $(event.target);
             const newSrc = srcs[Math.floor(Math.random()*6)];
-            $(image).slideUp();
-            setTimeout(function() {
+            $(image).slideUp("slow", function() {
                 $(image).attr("src", newSrc);
                 $(image).fadeIn();
-            }, 1000);
+            });
         })     
     }
     
@@ -98,7 +97,7 @@
      * opacity selected by the slider.
      */
     function animateCircleOpacity() {
-        $(".color-pickerbutton.primary").click(function() {
+        $(".color-picker button.primary").click(function() {
             const rangeVal = $(".color-picker input").val() / 100;
             $(".colored-shape").animate({
                 opacity: rangeVal
