@@ -8,9 +8,9 @@
     // $(duplicateElement);
     // $(toggleButtonSuccess);
     // $(addClickCountToButton);
-    // $(fillDomPropertiesTable);
-    // $(swapImagesOnClick);
-    // $(wrapParagraphsInColumnDiv);
+    $(fillDomPropertiesTable);
+    $(swapImagesOnClick);
+    $(wrapParagraphsInColumnDiv);
     
     // Set 2: Manipulation.
     // jQuery provides many utilities for mutating the DOM.
@@ -94,16 +94,24 @@
     function fillDomPropertiesTable() {
         const table = $(".dom-properties");
         const height = table.height();
-        $(".dom-properties tbody tr:eq(0) td").filter(":eq(1)").text(height);
+        const tableBody = $(".dom-properties tbody");
+        function setCellText(rowIndex, text) {
+            tableBody.find("tr").eq(rowIndex).find("td").filter(":eq(1)").text(text);
+        }
+        // tableBody.find("tr:eq(0) td").filter(":eq(1)").text(height);
+        setCellText(0, height);
         const width = table.width();
-        $(".dom-properties tbody tr:eq(1) td").filter(":eq(1)").text(width);
+        // tableBody.find("tr:eq(1) td").filter(":eq(1)").text(width);
+        setCellText(1, width);
         const innerHeight = table.innerHeight();
-        $(".dom-properties tbody tr:eq(2) td").filter(":eq(1)").text(innerHeight);
+        // tableBody.find("tr:eq(2) td").filter(":eq(1)").text(innerHeight);
+        setCellText(2, innerHeight);
         const innerWidth = table.innerWidth();
-        $(".dom-properties tbody tr:eq(3) td").filter(":eq(1)").text(innerWidth);
+        // tableBody.find("tr:eq(3) td").filter(":eq(1)").text(innerWidth);
+        setCellText(3, innerWidth);
         const offsetLeft = table.offset().left;
         const offsetTop = table.offset().top;
-        $(".dom-properties tbody tr:eq(4) td").filter(":eq(1)").text("left: " + offsetLeft + ", top: " + offsetTop);
+        tableBody.find("tr:eq(4) td").filter(":eq(1)").text("left: " + offsetLeft + ", top: " + offsetTop);
     }
     
     /**
@@ -111,8 +119,9 @@
      * two of those images are clicked, swap them.
      */
     function swapImagesOnClick() {
-        $(".nice-things img").click(function() {
-            if($(".nice-things img").hasClass("clicked")) {
+        const $niceThingsImage = $(".nice-things img");
+        $niceThingsImage.click(function() {
+            if($niceThingsImage.hasClass("clicked")) {
                 const first = $(".nice-things img.clicked");
                 const firstSrc = first.attr("src");
                 const second = $(event.target);
@@ -121,7 +130,7 @@
                 first.attr("src", secondSrc);
                 second.attr("src", firstSrc);
                 
-                $(".nice-things img").removeClass("clicked");
+                $niceThingsImage.removeClass("clicked");
             } else {
                 $(event.target).addClass("clicked");
             }
@@ -134,6 +143,6 @@
      * they line up correctly in the grid.
      */
     function wrapParagraphsInColumnDiv() {
-        $(".wrap p").wrapAll("<div class='small-4 columns' />");
+        $(".wrap p").wrap("<div class='small-4 columns' />");
     }
 })();

@@ -6,7 +6,7 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
-    $(animateImageSrcChangeOnClick);
+    // $(animateImageSrcChangeOnClick);
     $(animateCircleOpacity);
     $(animateParagraphTextChangeOnClick)
     
