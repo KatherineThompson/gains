@@ -27,18 +27,20 @@
     
     function getRandomImageOnClick() {
         const sources = [];
+        const $delayedImageDiv = $(".delayed-image");
+        const $delayedImage = $($delayedImageDiv.find(".image-target"));
         $("img").each(function(index, image) {
             sources.push($(image).attr("src"));
         })
-        $(".delayed-image button").click(function() {
+        $delayedImageDiv.find("button").click(function() {
             setTimeout(function() {
                 const index = Math.floor(Math.random() * sources.length);
                 const newSource = sources[index];
-                if ($(".delayed-image .image-target").children().length > 0) {
+                if ($delayedImage.children().length > 0) {
                 } else {
-                    $(".delayed-image .image-target").append("<img />")
+                    $delayedImage.append("<img />")
                 }
-                $(".delayed-image .image-target img").attr("src", newSource);
+                $delayedImage.find("img").attr("src", newSource);
             }, 1000);
         })
     }
@@ -49,19 +51,21 @@
      */
     function getRandomImageOnClickCustomTimer() {
         const sources = [];
+        const $delayedImageDiv = $(".delayed-image");
+        const $delayedImage = $($delayedImageDiv.find(".image-target"));
         $("img").each(function(index, image) {
             sources.push($(image).attr("src"));
         })
-        $(".delayed-image button").click(function() {
-            const waitTime = $(".delayed-image input").val()
+        $delayedImageDiv.find("button").click(function() {
+            const waitTime = $delayedImageDiv.find("input").val()
             setTimeout(function() {
                 const index = Math.floor(Math.random() * sources.length);
                 const newSource = sources[index];
-                if ($(".delayed-image .image-target").children().length > 0) {
+                if ($delayedImage.children().length > 0) {
                 } else {
-                    $(".delayed-image .image-target").append("<img />");
+                    $delayedImage.append("<img />");
                 }
-                $(".delayed-image .image-target img").attr("src", newSource);
+                $delayedImage.find("img").attr("src", newSource);
             }, waitTime);
         })
     }
@@ -87,10 +91,10 @@
         $(".many-images button").click(function() {
             const waitTime = $(".many-images input").val();
             setInterval(function() {
-                let index = Math.floor(Math.random() * sources.length);
-                let newSource = sources[index];
-                $(".many-images .image-target").append("<img />");
-                $(".many-images .image-target img").last().attr("src", newSource);
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                const $newImage = $("<img />").attr("src", newSource);
+                $(".many-images .image-target").append($newImage);
             }, waitTime);
         })
     }
@@ -117,23 +121,20 @@
         $("img").each(function(index, image) {
             sources.push($(image).attr("src"));
         });
-        
-        let intervalID;
-                       
+                              
         function startImageParade(button) {
             $(button).text("Stop").addClass("alert");
             const waitTime = $(".many-images input").val();
-            intervalID = window.setInterval(function() {
-                let index = Math.floor(Math.random() * sources.length);
-                let newSource = sources[index];
-                $(".many-images .image-target").append("<img />");
-                $(".many-images .image-target img").last().attr("src", newSource);
+            const intervalID = window.setInterval(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                const $newImage = $("<img />").attr("src", newSource);
+                $(".many-images .image-target").append($newImage);
             }, waitTime);
             
             $(button).one("click", function() {
                 window.clearInterval(intervalID);
-                $(button).text("Get me many images").removeClass("alert");
-                $(button).one("click", function() {
+                $(button).text("Get me many images").removeClass("alert").one("click", function() {
                     startImageParade(button);
                 });
             });
@@ -168,7 +169,7 @@
         $(".click-times button").click(function() {
             const date = new Date;
             const time = date.toTimeString();
-            $(".timings").append("<li>Time of click: " + time + "</li>");
+            $(".timings").append(`<li>Time of click: ${time} </li>`);
         });
     }
     
@@ -193,8 +194,8 @@
                 monthLength[1] = 29;
             }
             
-            const time = date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
-            const day = days[date.getUTCDay()] + ", " + months[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getUTCFullYear();
+            const time = `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+            const day = `${days[date.getUTCDay()]}, ${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
             
             let yearDiff = 0;
             let monthDiff = 0;
@@ -240,9 +241,9 @@
                 }
             }
             
-            $(".timings").append("<li>Time of click: " + time + " " + day +
-            "<br>Time since last click: " + yearDiff + " years " + monthDiff + " months " + dayDiff + " days " 
-            + hourDiff + " hours " + minuteDiff + " minutes " + secondDiff + " seconds " + "</li>");
+            $(".timings").append(`<li>Time of click: ${time} ${day}
+            <br>Time since last click: ${yearDiff} years ${monthDiff} months ${dayDiff} days 
+            ${hourDiff} hours ${minuteDiff} minutes ${secondDiff} seconds</li>`);
             priorDate = date;
         });
     }
