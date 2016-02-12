@@ -21,14 +21,14 @@
      * and put the response in the .data-response div.
      */
     
-    $(fillResponse);
+    $(makeRequestToPath);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
             $.get("/ajax-debug/go", function(response) {
                 $(".data-response p").text(JSON.stringify(response, null, "\t"));
             });
-        })
+        });
     }
 
     /**
@@ -38,8 +38,13 @@
      * starting with /ajax, so you may wish to try out some of
      * those requests.
      */
-    function makeRequestToPath() {
-
+    function makeRequestToPath(path) {
+        $(".ajax-form button").click(function() {
+            const path = $(".ajax-form input").filter(":eq(0)").val();
+            $.get(path, function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
