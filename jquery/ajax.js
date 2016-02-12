@@ -21,7 +21,7 @@
      * and put the response in the .data-response div.
      */
     
-    $(makeRequestWithData);
+    $(addLoadingIndicator);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
@@ -67,7 +67,14 @@
      * div to say "Loading..." until the response comes back.
      */
     function addLoadingIndicator() {
-
+        $(".ajax-form button").click(function() {
+            const path = $(".ajax-form input").filter(":eq(0)").val();
+            const data = $(".ajax-form input").filter(":eq(1)").val();
+            $(".data-response p").text("Loading...");
+            $.get(path, data, function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
