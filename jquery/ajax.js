@@ -20,8 +20,15 @@
      *      /ajax-debug/go
      * and put the response in the .data-response div.
      */
+    
+    $(fillResponse);
+    
     function fillResponse() {
-
+        $(".ajax-form button").click(function() {
+            $.get("/ajax-debug/go", function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        })
     }
 
     /**
