@@ -21,7 +21,7 @@
      * and put the response in the .data-response div.
      */
     
-    $(makeRequestToPath);
+    $(makeRequestWithData);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
@@ -53,7 +53,13 @@
      * ajax call. Display the result in the .data-response div.
      */
     function makeRequestWithData() {
-
+        $(".ajax-form button").click(function() {
+            const path = $(".ajax-form input").filter(":eq(0)").val();
+            const data = $(".ajax-form input").filter(":eq(1)").val();
+            $.get(path, data, function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
