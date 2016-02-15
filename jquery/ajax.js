@@ -187,7 +187,11 @@
                 success: function(data, textStatus, jqxhr) {
                     debugger;
                     $dataResponse.find("p").hide();
-                    $dataResponse.find("pre").show().text(JSON.stringify(data, null, "\t"));
+                    if (data === undefined) {
+                        $dataResponse.find("p").text("No response body from the server").show();
+                    } else {            
+                        $dataResponse.find("pre").show().text(JSON.stringify(data, null, "\t"));
+                    }
                     const headers = jqxhr.getAllResponseHeaders().split("\n").slice(0, -1);
                     const $table = $(".data-response-headers tbody");
                     $table.empty();
