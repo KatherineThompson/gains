@@ -97,7 +97,7 @@
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        return {getDefaultTasks, loadTasks, saveTasks};
+        return {getDefaultTasks: getDefaultTasks, loadTasks: loadTasks, saveTasks: saveTasks};
     }
     
     /**
@@ -236,6 +236,16 @@
             // Find the task with index taskIndex
             // Modify the DOM to move that element after its sibling. 
         }
+        
+        return {
+            onTaskCreated: onTaskCreated, 
+            addTask: addTask,
+            removeTaskFromUncompletedList: removeTaskFromUncompletedList,
+            onTaskCompleted: onTaskCompleted,
+            onTaskPriorityChange: onTaskPriorityChange,
+            increaseTaskPriority: increaseTaskPriority, 
+            decreaseTaskPriority: decreaseTaskPriority
+        };
     }
     
     /**
@@ -255,6 +265,8 @@
          * @return nothing
          */
         function init(view, model) {
+            debugger;
+            
             // Using the model, load the tasks from storage.
             // const tasks = ???
             // const completedTasks = ???
@@ -316,7 +328,7 @@
             
         }
         
-        return {init};
+        return {init: init};
     }
     
 })(window.$);
