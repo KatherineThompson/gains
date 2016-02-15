@@ -21,7 +21,7 @@
      * and put the response in the .data-response div.
      */
     
-    $(displayResponseHeaders);
+    $(sendCustomHeaders);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
@@ -128,6 +128,42 @@
      * the ajax request.
      */
     function sendCustomHeaders() {
-
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const headerKey = $ajaxForm.find("input").filter(":eq(2)").val();
+            const headerValue = $ajaxForm.find("input").filter(":eq(3)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            $.ajax({
+                url: path,
+                data: data,
+                beforeSend: function(jqxhr) {
+                    jqxhr.setRequestHeader(headerKey, headerValue);
+                },
+                success: function(data, textStatus, jqxhr) {
+                    debugger;
+                    $dataResponse.find("p").hide();
+                    $dataResponse.find("pre").show().text(JSON.stringify(data, null, "\t"));
+                    const headers = jqxhr.getAllResponseHeaders().split("\n").slice(0, -1);
+                    const $table = $(".data-response-headers tbody");
+                    $table.empty();
+                    headers.forEach(function(header, index) {
+                        const splitHeader = header.split(": ");
+                        const $nameCell = $("<td></td>").text(splitHeader[0]);
+                        const $valueCell = $("<td></td>").text(splitHeader[1]);
+                        const $row = $("<tr></tr>").append($nameCell).append($valueCell);                  
+                        $table.append($row);
+                    });                    
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    debugger;
+                    $dataResponse.find("pre").hide();
+                    $dataResponse.find("p").show().text(errorThrown);
+                    $(".data-response-headers tbody").empty();
+                }
+            });                   
+        });
     }
 })();
