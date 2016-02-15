@@ -4,12 +4,15 @@
     const view = getView(),
         controller = getController(),
         model = getModel();
-        
-    controller.init(view, model);
+    
+    $(function() {
+        controller.init(view, model);
+    })    
+    
     
     /**
      * The model contains functions related to the backing
-     * data of our app. A task is represetnted as an object:
+     * data of our app. A task is represented as an object:
      * 
      *      {name: string, isComplete: boolean}
      * 
@@ -35,7 +38,7 @@
             // Define some list of initial tasks
             // and return that list, instead of 
             // just returning an empty list.
-            return [];
+            return [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
         }
         
         /**
@@ -115,6 +118,12 @@
          * @return nothing
          */
         function addTask(task) {
+            const $newTask = $("<li></li>");
+            $("<span>✓</span>").addClass("checkmark").appendTo($newTask);
+            $("<span></span>").text(task.name).appendTo($newTask);
+            if (!task.isCompleted) {
+                $("#uncompleted-tasks").append($newTask);
+            }
             // Construct a DOM element for the new task. If task.isComplete === true,
             // the task will look different. (See index.html for a spec of how it should look.)
             
@@ -268,7 +277,7 @@
             debugger;
             
             // Using the model, load the tasks from storage.
-            // const tasks = ???
+            const tasks = model.getDefaultTasks();
             // const completedTasks = ???
             // We want to define these lists here, so we can 
             // share them via closure with the rest of the controller.
@@ -277,6 +286,9 @@
             // storage. Use the default tasks, provided by the model, instead.
             
             // Now that we have some tasks, add them to the view.
+            tasks.forEach(function(task) {
+                view.addTask(task);
+            })
             
             // We want to know when a new task is created, but we don't
             // want to hardcode to DOM details in the controller. We'll
