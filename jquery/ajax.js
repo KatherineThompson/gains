@@ -21,7 +21,7 @@
      * and put the response in the .data-response div.
      */
     
-    $(addLoadingIndicator);
+    $(makeRequestWithData);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
@@ -53,11 +53,14 @@
      * ajax call. Display the result in the .data-response div.
      */
     function makeRequestWithData() {
-        $(".ajax-form button").click(function() {
-            const path = $(".ajax-form input").filter(":eq(0)").val();
-            const data = $(".ajax-form input").filter(":eq(1)").val();
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
             $.get(path, data, function(response) {
-                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+                const $dataResponse = $(".data-response");
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").text(JSON.stringify(response, null, "\t"));
             });
         });
     }
@@ -67,12 +70,17 @@
      * div to say "Loading..." until the response comes back.
      */
     function addLoadingIndicator() {
-        $(".ajax-form button").click(function() {
-            const path = $(".ajax-form input").filter(":eq(0)").val();
-            const data = $(".ajax-form input").filter(":eq(1)").val();
-            $(".data-response p").text("Loading...");
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
             $.get(path, data, function(response) {
-                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").text(JSON.stringify(response, null, "\t"));
+            }).fail(function() {
+                $dataResponse.find("p").text("Request failed");
             });
         });
     }
@@ -86,7 +94,7 @@
      * some useful properties and methods on it.
      */
     function displayResponseHeaders() {
-
+        
     }
 
     /**
