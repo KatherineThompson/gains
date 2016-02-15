@@ -21,7 +21,7 @@
      * and put the response in the .data-response div.
      */
     
-    $(makeRequestWithData);
+    $(displayResponseHeaders);
     
     function fillResponse() {
         $(".ajax-form button").click(function() {
@@ -78,9 +78,10 @@
             $dataResponse.find("p").text("Loading...");
             $.get(path, data, function(response) {
                 $dataResponse.find("p").hide();
-                $dataResponse.find("pre").text(JSON.stringify(response, null, "\t"));
+                $dataResponse.find("pre").show().text(JSON.stringify(response, null, "\t"));
             }).fail(function() {
-                $dataResponse.find("p").text("Request failed");
+                $dataResponse.find("pre").hide();
+                $dataResponse.find("p").show().text("Request failed");
             });
         });
     }
@@ -94,7 +95,31 @@
      * some useful properties and methods on it.
      */
     function displayResponseHeaders() {
-        
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            const responseObject = $.get(path, data, function(response) {
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").show().text(JSON.stringify(response, null, "\t"));
+                const headers = responseObject.getAllResponseHeaders().split("\n").slice(0, -1);
+                const $table = $(".data-response-headers tbody");
+                $table.empty();
+                headers.forEach(function(header, index) {
+                    const splitHeader = header.split(": ");
+                    const $nameCell = $("<td></td>").text(splitHeader[0]);
+                    const $valueCell = $("<td></td>").text(splitHeader[1]);
+                    const $row = $("<tr></tr>").append($nameCell).append($valueCell);                  
+                    $table.append($row);
+                });
+            }).fail(function() {
+                $dataResponse.find("pre").hide();
+                $dataResponse.find("p").show().text("Request failed");
+                $(".data-response-headers tbody").empty();
+            });
+        });
     }
 
     /**
