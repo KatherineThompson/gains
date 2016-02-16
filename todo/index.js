@@ -100,7 +100,7 @@
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        return {getDefaultTasks: getDefaultTasks, loadTasks: loadTasks, saveTasks: saveTasks};
+        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveTasks: saveTasks};
     }
     
     /**
@@ -121,9 +121,12 @@
             const $newTask = $("<li></li>");
             $("<span>✓</span>").addClass("checkmark").appendTo($newTask);
             $("<span></span>").text(task.name).appendTo($newTask);
-            if (!task.isCompleted) {
+            if (!task.isComplete) {
                 $("#uncompleted-tasks").append($newTask);
+            } else {
+                $("#completed-tasks").append($newTask);
             }
+            
             // Construct a DOM element for the new task. If task.isComplete === true,
             // the task will look different. (See index.html for a spec of how it should look.)
             
@@ -168,7 +171,11 @@
         function onTaskCompleted(callback) {
             // Find DOM elements that the user will interact with to indicate
             // that a task has been completed.
-            
+            $("#uncompleted-tasks .checkmark").click(function() {
+                const index = $(event.target).parent().prevAll().length;
+                callback(index);
+                debugger;
+            })
             // Add an event listener to those DOM elements so we know when a task
             // has been completed.
             
@@ -187,6 +194,7 @@
          * @return nothing
          */
         function removeTaskFromUncompletedList(taskIndex) {
+            $("#uncompleted-tasks li").filter(":eq(" + taskIndex + ")").remove();
             // Find the DOM element containing a list of incomplete tasks.
             // Find the child at index taskIndex.
             // Remove that child.
@@ -278,7 +286,7 @@
             
             // Using the model, load the tasks from storage.
             const tasks = model.getDefaultTasks();
-            // const completedTasks = ???
+            const completedTasks = model.getDefaultCompletedTasks();
             // We want to define these lists here, so we can 
             // share them via closure with the rest of the controller.
             
@@ -311,7 +319,15 @@
             // the view will notify us. Call the view function that will
             // allow us to provide a callback that give us a chance to
             // react to a task being commpleted.
-            
+            view.onTaskCompleted(function(index) {
+                view.removeTaskFromUncompletedList(index);
+                tasks[index].isComplete = true;
+                completedTasks.push(tasks[index])
+                tasks.splice(index, 1);
+                view.addTask(completedTasks[completedTasks.length - 1]);
+                model.saveTasks(tasks);
+                model.saveTasks(completedTasks);
+            });
                 // Within that callback, remove the completed task from the view's
                 // collection of incomplete tasks.
                 

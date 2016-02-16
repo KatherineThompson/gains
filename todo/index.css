@@ -1,4 +1,11 @@
 .checkmark {
-    color: limegreen;
     margin-right: .5em;
+}
+
+#uncompleted-tasks .checkmark {
+    color: dimgray;
+}
+
+#completed-tasks .checkmark {
+    color: limegreen;
 }
