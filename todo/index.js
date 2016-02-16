@@ -70,12 +70,17 @@
          * @return a list of tasks if there are tasks in storage. null if there is nothing in storage.
          */
         function loadTasks() {
+            if (localStorage.uncompletedTasks) {
+                return JSON.parse(localStorage.uncompletedTasks);
+            } else{
+                return null;
+            }
             // Access local storage, and check to see if there is anything saved
             // under the key that this app uses for incomplete tasks. You may wish to store this key 
             // as a const that can be shared between both this function and 
             // saveTasks(). If there is nothing saved under the key, then return null.
             // Otherwise, return the saved value.
-            return null;
+            
         }
         
         /**
@@ -86,12 +91,16 @@
          * @return a list of completed tasks if there are tasks in storage. null if there is nothing in storage.
          */
         function loadCompletedTasks() {
+            if (localStorage.completedTasks) {
+                return JSON.parse(localStorage.completedTasks);
+            } else{
+                return null;
+            }
             // Access local storage, and check to see if there is anything saved
             // under the key that this app uses for complete tasks. You may wish to store this key 
             // as a const that can be shared between both this function and 
             // saveTasks(). If there is nothing saved under the key, then return null.
             // Otherwise, return the saved value.
-            return null;
         }
         
         /**
@@ -103,17 +112,18 @@
          * @param tasks - a list of tasks to save to local storage.
          * @return nothing
          */
-        function saveUncompletedTasks(tasks) {
-            localStorage.uncompletedTasks = JSON.stringify(tasks);
+        function saveTasks(tasks, taskList) {
+            if (taskList === "uncompletedTasks") {
+                localStorage.uncompletedTasks = JSON.stringify(tasks);
+            } else {
+                localStorage.completedTasks = JSON.stringify(tasks);
+            }
+            
             // Write `tasks` to local storage. To figure out which
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        function saveCompletedTasks(tasks) {
-            localStorage.completedTasks = JSON.stringify(tasks);
-        }
-        
-        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveUncompletedTasks: saveUncompletedTasks, saveCompletedTasks: saveCompletedTasks};
+        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveTasks: saveTasks};
     }
     
     /**
@@ -161,6 +171,11 @@
          * @return nothing
          */
         function onTaskCreated(callback) {
+            $("#add-button").click(function() {
+                const newTask = $("#add-input input").val();
+                $("#add-input input").val("");
+                callback(newTask);
+            })
             // Find the DOM element that lets us know when a new task was created.
             // (This is probably a button that gets clicked, or a form that gets 
             // submitted, or a text field that has the "enter" key pressed, etc.)
@@ -321,10 +336,12 @@
                 // that a new task has been created. Let's create a new 
                 // task object to represent that new task. New tasks start
                 // with isComplete = false.
-                
+                const newTask = {name: newTaskName, isComplete: false};
                 // Once we have a new task object, add it to the view.
                 // Next, add it to our in-memory tasks list. 
-                
+                view.addTask(newTask);
+                tasks.push(newTask);
+                model.saveTasks(tasks, "uncompletedTasks");
                 // Save the tasks list to persistent storage.  
             });
             
@@ -339,8 +356,8 @@
                 completedTasks.push(tasks[index])
                 tasks.splice(index, 1);
                 view.addTask(completedTasks[completedTasks.length - 1]);
-                model.saveUncompletedTasks(tasks);
-                model.saveCompletedTasks(completedTasks);
+                model.saveTasks(tasks, "uncompletedTasks");
+                model.saveTasks(completedTasks, "completedTasks");
             });
                 // Within that callback, remove the completed task from the view's
                 // collection of incomplete tasks.
