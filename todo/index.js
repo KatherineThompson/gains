@@ -38,7 +38,11 @@
             // Define some list of initial tasks
             // and return that list, instead of 
             // just returning an empty list.
-            return [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
+            if (!localStorage.uncompletedTasks) {
+                const tasks =  [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
+                localStorage.uncompletedTasks = JSON.stringify(tasks);
+            }
+            return JSON.parse(localStorage.uncompletedTasks);
         }
         
         /**
@@ -51,7 +55,11 @@
             // Just like getDefaultTasks, except
             // these are the tasks that the user 
             // has already completed.
-            return [];
+            if (!localStorage.completedTasks) {
+                const completedTasks = [{name: "Buy cat toys", isComplete: true}, {name: "Buy catnip", isComplete: true}, {name: "Pet cat", isComplete: true}];
+                localStorage.completedTasks = JSON.stringify(completedTasks);
+            }
+            return JSON.parse(localStorage.completedTasks);
         }
         
         /**
@@ -95,12 +103,17 @@
          * @param tasks - a list of tasks to save to local storage.
          * @return nothing
          */
-        function saveTasks(tasks) {
+        function saveUncompletedTasks(tasks) {
+            localStorage.uncompletedTasks = JSON.stringify(tasks);
             // Write `tasks` to local storage. To figure out which
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveTasks: saveTasks};
+        function saveCompletedTasks(tasks) {
+            localStorage.completedTasks = JSON.stringify(tasks);
+        }
+        
+        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveUncompletedTasks: saveUncompletedTasks, saveCompletedTasks: saveCompletedTasks};
     }
     
     /**
@@ -174,7 +187,6 @@
             $("#uncompleted-tasks .checkmark").click(function() {
                 const index = $(event.target).parent().prevAll().length;
                 callback(index);
-                debugger;
             })
             // Add an event listener to those DOM elements so we know when a task
             // has been completed.
@@ -282,7 +294,6 @@
          * @return nothing
          */
         function init(view, model) {
-            debugger;
             
             // Using the model, load the tasks from storage.
             const tasks = model.getDefaultTasks();
@@ -298,6 +309,9 @@
                 view.addTask(task);
             })
             
+            completedTasks.forEach(function(task) {
+                view.addTask(task);
+            })
             // We want to know when a new task is created, but we don't
             // want to hardcode to DOM details in the controller. We'll
             // use the view to allow us to talk to the DOM while containing
@@ -325,8 +339,8 @@
                 completedTasks.push(tasks[index])
                 tasks.splice(index, 1);
                 view.addTask(completedTasks[completedTasks.length - 1]);
-                model.saveTasks(tasks);
-                model.saveTasks(completedTasks);
+                model.saveUncompletedTasks(tasks);
+                model.saveCompletedTasks(completedTasks);
             });
                 // Within that callback, remove the completed task from the view's
                 // collection of incomplete tasks.
