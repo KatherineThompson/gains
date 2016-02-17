@@ -304,12 +304,124 @@ function product(nums) {
  * @return all those numbers exponentiated together
  * @example
  *
- *      powerAll(2, 3, 4) // ==> (2 ^ 3) ^ 4 ==> 4096
+ *      powerAll([2, 3, 4]) // ==> (2 ^ 3) ^ 4 ==> 4096
  */
 function powerAll(nums) {
 
 }
 
 /**
- * 
+ * Concatenate all the strings in a list together into a single string.
+ *
+ * @param strs - a list of strings to concatenate
+ * @return a single string
+ * @example
+ *
+ *      concatAll(['a', 'bbbb', 'cde']) // ==> 'abbbcde'
  */
+function concatAll(strs) {
+
+}
+
+/**
+ * Flatten a list of lists into a single list.
+ *
+ * @param lists – a list of lists
+ * @return a single list
+ * @example
+ *
+ *      flatten([[], [1, 2], [3], [4, 5]]) // ==> [1, 2, 3, 4, 5]
+ */
+function flatten(lists) {
+
+}
+
+/**
+ * Get the total length of all strings in a list.
+ *
+ * @param strs – a list of strings to measure
+ * @return the cumulative length of all strings
+ * @example
+ *
+ *      getTotalLength(["ab", "", "cde"]) // ==> 5
+ */
+function getTotalLength(strs) {
+
+}
+
+// Now we get meta! :)
+// Basically any operation on collections of data can be implemented with a reduce.
+
+/**
+ * Return a new list with a function applied to each member of the input list.
+ *
+ * @param list – a list of elements to apply a function to
+ * @param fn – a function to apply to each member of the list
+ * @return A new list that is the old list with `fn` applied to each member
+ * @example
+ *
+ *      map([1, 2, 3], x => x + 1) // ==> [2, 3, 4]
+ */
+function map(list, fn) {
+    // Use reduce to implement this.
+}
+
+/**
+ * Return a new list filtered by the predicate.
+ *
+ * @param list – a list of elements to filter
+ * @param predicate – a boolean which will return truthy or falsey
+ * @return a list of elements for which the predicate returned truthy
+ * @example
+ *
+ *      filter([1, 2, 3], x => x < 3) // ==> [1, 2]
+ */
+function filter(list, predicate) {
+    // Use reduce to implement this
+}
+
+// It's turtles all the way down.
+
+/**
+ * Return a single value, created by applying fn to each value of the array and an accumulator.
+ *
+ * @param list – a list of elements to reduce to a single value
+ * @param reducerFn – a function that will be called with (accumulator, nextValue) and returns a single value
+ * @param initialValue – the accumulator passed to reducerFn on the first iteration
+ * @return a single value
+ * @example
+ *
+ *      reduce([1, 2, 3], (sum, num) => sum + num, 0) // ==> 6
+ */
+function reduce(list, reducerFn, initialValue) {
+    // Use forEach to solve this one.
+}
+
+// Now solve it recursively!
+function reduceRecursive(list, reducerFn, initialValue) {
+
+}
+
+// We will export all these functions so the tests can access them.
+// Don't worry about how all this works for now.
+module.exports = {
+    subtractOneFromEachNumber,
+    wrapStrings,
+    getStringLengths,
+    pick,
+    pluck,
+    lookupUsers,
+    getFirstElements,
+    getOddNumbers,
+    getStringsWithCat,
+    getNumberListsSummingToZero,
+    getObjectsWithAtLeastThreeKeys,
+    powerAll,
+    concatAll,
+    flatten,
+    getTotalLength,
+    map,
+    filter,
+    reduce,
+    reduceRecursive
+};
