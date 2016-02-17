@@ -38,11 +38,7 @@
             // Define some list of initial tasks
             // and return that list, instead of 
             // just returning an empty list.
-            if (!localStorage.uncompletedTasks) {
-                const tasks =  [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
-                localStorage.uncompletedTasks = JSON.stringify(tasks);
-            }
-            return JSON.parse(localStorage.uncompletedTasks);
+                return [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
         }
         
         /**
@@ -55,13 +51,8 @@
             // Just like getDefaultTasks, except
             // these are the tasks that the user 
             // has already completed.
-            if (!localStorage.completedTasks) {
-                const completedTasks = [{name: "Buy cat toys", isComplete: true}, {name: "Buy catnip", isComplete: true}, {name: "Pet cat", isComplete: true}];
-                localStorage.completedTasks = JSON.stringify(completedTasks);
-            }
-            return JSON.parse(localStorage.completedTasks);
-        }
-        
+            return [{name: "Buy cat toys", isComplete: true}, {name: "Buy catnip", isComplete: true}, {name: "Pet cat", isComplete: true}];
+        }        
         /**
          * Load tasks from persistent storage. Called by the controller 
          * when the app is initializing, and we want to fetch the 
@@ -112,18 +103,17 @@
          * @param tasks - a list of tasks to save to local storage.
          * @return nothing
          */
-        function saveTasks(tasks, taskList) {
-            if (taskList === "uncompletedTasks") {
-                localStorage.uncompletedTasks = JSON.stringify(tasks);
-            } else {
-                localStorage.completedTasks = JSON.stringify(tasks);
-            }
-            
+        function saveTasks(tasks) {
+                localStorage.uncompletedTasks = JSON.stringify(tasks);     
             // Write `tasks` to local storage. To figure out which
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, saveTasks: saveTasks};
+        function saveCompletedTasks(tasks) {
+            localStorage.completedTasks = JSON.stringify(tasks);
+        }
+        
+        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, loadCompletedTasks: loadCompletedTasks, saveTasks: saveTasks, saveCompletedTasks: saveCompletedTasks};
     }
     
     /**
@@ -133,6 +123,8 @@
      * class names exist on which elements) lives here.
      */
     function getView() {
+        let onTaskCompleteCallback = null;
+        let onTaskPriorityChangeCallback = null;
         /**
          * Add a task to the end of the list. Called by the controller when
          * a new task has been created, and it needs to be added to the view.
@@ -142,10 +134,33 @@
          */
         function addTask(task) {
             const $newTask = $("<li></li>");
-            $("<span>✓</span>").addClass("checkmark").appendTo($newTask);
+            const $checkmarkSpan = $("<span>✓</span>").addClass("checkmark").appendTo($newTask);
             $("<span></span>").text(task.name).appendTo($newTask);
+            
             if (!task.isComplete) {
+                $("<span>▲</span>").addClass("up-arrow").appendTo($newTask).click(function() {
+                    if (onTaskPriorityChangeCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskPriorityChangeCallback(index, true);
+                    }
+                });
+                
+                $("<span>▼</span>").addClass("down-arrow").appendTo($newTask).click(function() {
+                    if (onTaskPriorityChangeCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskPriorityChangeCallback(index, false);
+                    }
+                });
+                
+                $checkmarkSpan.click(function() {
+                    if (onTaskCompleteCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskCompleteCallback(index);
+                    }
+                });
+                
                 $("#uncompleted-tasks").append($newTask);
+                
             } else {
                 $("#completed-tasks").append($newTask);
             }
@@ -199,10 +214,11 @@
         function onTaskCompleted(callback) {
             // Find DOM elements that the user will interact with to indicate
             // that a task has been completed.
-            $("#uncompleted-tasks .checkmark").click(function() {
-                const index = $(event.target).parent().prevAll().length;
-                callback(index);
-            })
+            // $("#uncompleted-tasks .checkmark").click(function() {
+            //     const index = $(event.target).parent().prevAll().length;
+            //     callback(index);
+            // })
+            onTaskCompleteCallback = callback;
             // Add an event listener to those DOM elements so we know when a task
             // has been completed.
             
@@ -221,7 +237,7 @@
          * @return nothing
          */
         function removeTaskFromUncompletedList(taskIndex) {
-            $("#uncompleted-tasks li").filter(":eq(" + taskIndex + ")").remove();
+            $("#uncompleted-tasks li").eq(taskIndex).remove();
             // Find the DOM element containing a list of incomplete tasks.
             // Find the child at index taskIndex.
             // Remove that child.
@@ -240,7 +256,7 @@
          */
         function onTaskPriorityChange(callback) {
             // Find DOM elements that the user will click to change a task's priority.
-            
+            onTaskPriorityChangeCallback = callback;
             // Add an event listener to those DOM elements.
             
                 // Within that event listener, figure out what the index of the task
@@ -261,6 +277,7 @@
          * @return nothing
          */
         function increaseTaskPriority(taskIndex) {
+            $("#uncompleted-tasks li").eq(taskIndex).insertBefore($("#uncompleted-tasks li").eq(taskIndex - 1));
             // Find the DOM element that contains incomplete tasks
             // Find the task with index taskIndex
             // Modify the DOM to move that element before its sibling. 
@@ -276,6 +293,7 @@
          * @return nothing
          */
         function decreaseTaskPriority(taskIndex) {
+            $("#uncompleted-tasks li").eq(taskIndex).insertAfter($("#uncompleted-tasks li").eq(taskIndex + 1));
             // Find the DOM element that contains incomplete tasks
             // Find the task with index taskIndex
             // Modify the DOM to move that element after its sibling. 
@@ -311,8 +329,15 @@
         function init(view, model) {
             
             // Using the model, load the tasks from storage.
-            const tasks = model.getDefaultTasks();
-            const completedTasks = model.getDefaultCompletedTasks();
+            let tasks = model.loadTasks();
+            if (tasks === null) {
+                tasks = model.getDefaultTasks();
+            }
+            
+            let completedTasks = model.loadCompletedTasks();
+            if (completedTasks === null) {
+                completedTasks = model.getDefaultCompletedTasks();
+            }
             // We want to define these lists here, so we can 
             // share them via closure with the rest of the controller.
             
@@ -356,8 +381,8 @@
                 completedTasks.push(tasks[index])
                 tasks.splice(index, 1);
                 view.addTask(completedTasks[completedTasks.length - 1]);
-                model.saveTasks(tasks, "uncompletedTasks");
-                model.saveTasks(completedTasks, "completedTasks");
+                model.saveTasks(tasks);
+                model.saveCompletedTasks(completedTasks);
             });
                 // Within that callback, remove the completed task from the view's
                 // collection of incomplete tasks.
@@ -375,7 +400,21 @@
             // Just like we registered a callback with the view for when a task
             // was created or completed, register a callback for when a task
             // has been re-ordered.
-            
+            view.onTaskPriorityChange(function(index, isIncreasingPriority) {
+                const task = tasks[index];
+                if (isIncreasingPriority && index !== 0) {
+                    debugger;
+                    view.increaseTaskPriority(index);
+                    tasks.splice(index, 1);
+                    tasks.splice(index - 1, 0, task);
+                } else if (!isIncreasingPriority && index < tasks.length - 1) {
+                    debugger;
+                    view.decreaseTaskPriority(index);
+                    tasks.splice(index, 1);
+                    tasks.splice(index + 1, 0, task);
+                }
+                model.saveTasks(tasks);
+            });
                 // Within that callback, use the index to find the task to update.
                 
                 // Call a view function to move the task up or down in the list.

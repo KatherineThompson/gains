@@ -4,8 +4,38 @@
 
 #uncompleted-tasks .checkmark {
     color: dimgray;
+    cursor: pointer;
 }
 
-#completed-tasks .checkmark {
+#uncompleted-tasks .checkmark:hover,  #completed-tasks .checkmark{
     color: limegreen;
+}
+
+.up-arrow {
+    margin-left: .5em;
+    color: lightgreen;
+    cursor: pointer;
+}
+
+.up-arrow:hover {
+    color: limegreen;
+}
+
+.down-arrow {
+    color: orangered;
+    cursor: pointer;
+}
+
+.down-arrow:hover {
+    color: indianred;
+}
+
+li:first-child span:nth-of-type(3) {
+    color: dimgray;
+    cursor: auto;
+}
+
+li:last-child span:nth-of-type(4) {
+    color: dimgray;
+    cursor: auto;
 }
