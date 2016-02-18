@@ -8,7 +8,7 @@ function crappierVersionOfAddOneToEachNumber(nums) {
     for (let i = 0; i < nums.length; i++) {
         numsWithOneAdded.push(nums[i] + 1);
     }
-    return nums;
+    return numsWithOneAdded;
 }
 
 // Maps make things cleaner. In the function above,
@@ -64,7 +64,7 @@ function fatArrowDemo(nums) {
  *         corresponding index in the input list.
  */
 function subtractOneFromEachNumber(nums) {
-
+    return nums.map(num => num - 1);
 }
 
 /**
@@ -78,7 +78,7 @@ function subtractOneFromEachNumber(nums) {
  *      wrapStrings(["hi", "there"], "cat") // ==> ["cathicat", "cattherecat"]
  */
 function wrapStrings(strs, wrapper) {
-
+    return strs.map(str => wrapper + str + wrapper);
 }
 
 /**
