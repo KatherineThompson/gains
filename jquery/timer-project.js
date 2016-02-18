@@ -151,7 +151,7 @@
                 
                 timerStoppedAt: null,
                 
-                timerTotal: 3588000
+                timerTotal: 0
             };
         }
         
