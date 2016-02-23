@@ -38,7 +38,7 @@ tape('data-manipulation', t => {
 
             t.deepEqual(
                 dataManipulation.wrapStrings(['inner', 'strings'], '_omg_'),
-                ['_omg_inner_omg', '_omg_strings_omg'],
+                ['_omg_inner_omg_', '_omg_strings_omg_'],
                 'works with strings'
             );
 
@@ -65,7 +65,7 @@ tape('data-manipulation', t => {
             );
 
             t.deepEqual(
-                dataManipulation.wrapStrings(['']),
+                dataManipulation.getStringLengths(['']),
                 [0],
                 'works with empty string'
             );
@@ -119,7 +119,7 @@ tape('data-manipulation', t => {
             t.plan(3);
 
             t.deepEqual(
-                dataManipulation.lookupUsers([]),
+                dataManipulation.lookupUsers([], []),
                 [],
                 'returns an empty list when called with empty list'
             );
@@ -153,7 +153,7 @@ tape('data-manipulation', t => {
             );
 
             t.deepEqual(
-                dataManipulation.getFirstElements([[5, 4, 3], [9, 8, 7], 2]),
+                dataManipulation.getFirstElements([[5, 4, 3], [9, 8, 7]], 2),
                 [[5, 4], [9, 8]],
                 'returns the first elements'
             );
@@ -356,7 +356,7 @@ tape('data-manipulation', t => {
 
             t.deepEqual(
                 dataManipulation.map(['aaa', 'bb', 'c'], str => str + str),
-                ['aaaaaa', 'bbbbb', 'cc'],
+                ['aaaaaa', 'bbbb', 'cc'],
                 'applies a function to all strings'
             );
         });
@@ -397,9 +397,9 @@ tape('data-manipulation', t => {
             t.plan(2);
 
             t.deepEqual(
-                dataManipulation.reduceRecursive([]),
-                [],
-                'returns an empty list when called with empty list'
+                dataManipulation.reduceRecursive([], () => null, 'initial value'),
+                'initial value',
+                'returns the initial value when called with empty list'
             );
 
             t.deepEqual(
