@@ -178,21 +178,26 @@ function pluck(objs, key) {
  *      lookupUsers(allUsers, ["Liam", "Paul"]) // ==> [{name: "Liam", age: 4}, {name: "Paul", age: 32}]
  */
 function lookupUsers(allUsers, userNames) {
-    let userObjects = userNames.map(name => {
-        let userObj;
-        allUsers.forEach(function(user) {
-            if (user.name === name) {
-                userObj = user;
-            }
-        });
-        return userObj;
-    });
-    userObjects.forEach(function(element, index) {
-        if (element === undefined) {
-            userObjects.splice(index, 1);
-        }
-    });
-    return userObjects;
+    const userObjects = userNames.map(name => allUsers.find(user => user.name === name)
+        // {let userObj;
+        // allUsers.forEach(function(user) {
+        //     if (user.name === name) {
+        //         userObj = user;
+        //     }
+        // });
+        // return userObj;}
+    );
+    return userObjects.filter(userObj => userObj !== undefined);
+    // userObjects.forEach(function(element, index) {
+    //     if (element === undefined) {
+    //         userObjects.splice(index, 1);
+    //     }
+    // });
+    // return userObjects;
+}
+
+function getFirstCatString(catStrings) {
+    return catStrings.find(str => str.includes("cat"))
 }
 
 /**
@@ -207,12 +212,8 @@ function lookupUsers(allUsers, userNames) {
  *      getFirstElements([[5, 4, 3], [9, 8, 7], 2]) // ==> [[5, 4], [9, 8]]
  */
 function getFirstElements(lists, elemCount) {
-    if (elemCount > 0) {
-        const newLists = [];
-        lists.forEach(function(list) {
-            newLists.push(list.filter(elem => list.indexOf(elem) < elemCount));
-        })
-        return newLists;   
+    if (elemCount > 0) {      
+        return lists.map(list => list.filter((elem, index) => index < elemCount));
     } else {
         return [];
     }
@@ -307,13 +308,14 @@ function getStringsWithCat(strings) {
  *
  */
 function getNumberListsSummingToZero(numLists) {
-    return numLists.filter(list => {
-        let sum = 0;
-        list.forEach(function(num) {
-            sum += num;
-        });
-        return sum === 0;
-    })
+    return numLists.filter(list => 
+        // let sum = 0;
+        list.reduce((sumSoFar, num) => sumSoFar + num, 0) === 0
+        // list.forEach(function(num) {
+        //     sum += num;
+        // });
+        // return sum === 0;
+    );
 }
 
 /**
@@ -464,9 +466,10 @@ function filter(list, predicate) {
     // Use reduce to implement this
     return list.reduce((listSoFar, elem) => {
         if (predicate(elem)) {
-            listSoFar.push(elem);
+            return listSoFar.concat(elem);
+        } else {
+            return listSoFar;
         }
-        return listSoFar;
     }, []);
 }
 
