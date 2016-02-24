@@ -6,6 +6,6 @@
     "node-static": "^0.7.7"
   },
   "scripts": {
-      "start": "static -H '{\"Cache-Control\": \"no-cache, must-revalidate\"}'"
+      "start": "static"
   }
 }
