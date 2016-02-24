@@ -1,0 +1,20 @@
+#board .row .columns {
+    border: 1px solid #2199e8;
+    height: 200px;
+}
+
+#board .row .top {
+    border-top-width: 2px;
+}
+
+#board .row .left {
+    border-left-width: 2px;
+}
+
+#board .row .right {
+    border-right-width: 2px;
+}
+
+#board .row .bottom {
+    border-bottom-width: 2px;
+}
