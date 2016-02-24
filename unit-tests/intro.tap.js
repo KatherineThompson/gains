@@ -8,7 +8,7 @@ const tape = require('tape');
 
 // To learn more about Tape, see https://www.npmjs.com/package/tape.
 
-// Start by calling .test() with the name
+// Start by calling tape() with the name
 // of the test suite, and a function that takes
 // a single argument, t, and performs tests.
 // We are using fat arrow syntax here, but that's
@@ -59,9 +59,9 @@ tape('intro', t => {
         // be used later to ensure that setTimeout waited long enough before invoking
         // our callback.
         t.plan(1);
-        const start = Date.now(),
-            timeoutLength = 200;
-
+        const start = Date.now();
+        const timeoutLength = 200;
+        
         // Next, we'll take the action, which in this case is calling setTimeout.
         setTimeout(
             () =>
@@ -93,7 +93,7 @@ tape('intro', t => {
         const actual = ['a', 'b', 'c'].join(',');
 
         // Verification
-        t.equal(expected, actual, 'string.join combines a list into a single string.');
+        t.equal(actual, expected, 'string.join combines a list into a single string.');
     });
 
     // A few more things about the specifics of the tape api:
@@ -107,7 +107,7 @@ tape('intro', t => {
         const actual = 'a,b,c'.split(',');
 
         // Verification
-        t.deepEqual(expected, actual, 'string.split splits a list by a delimiter');
+        t.deepEqual(actual, expected, 'string.split splits a list by a delimiter');
         // In this case, we needed to use t.deepEqual() instead of t.equal().
         // That's because we were comparing arrays. t.equal() does a comparison
         // using ===. t.deepEqual() actually looks at what's in the properties of
@@ -136,17 +136,19 @@ tape('intro', t => {
     t.test('string.trim', t => {
         // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
 
-        t.plan(1);
-        t.equal(true, true, 'remove this assertion when you fill out this section');
+        t.plan(4);
+        // t.equal(true, true, 'remove this assertion when you fill out this section');
 
         // Test that calling ''.trim returns the empty string
-
+        t.equal("".trim(), "", "''.trim returns the empty string");
         // Test that calling .trim() on a string composed entirely of whitespace returns the empty string.
-
+        const whiteSpace = "            ";
+        t.equal(whiteSpace.trim(), "", ".trim returns empty string when called on a string composed entirely of white space");
         // Test that calling .trim() on a string with whitespace at the beginning and end but not the middle
         // removes that whitespace.
-
+        t.equal(" catisplump ".trim(), "catisplump", ".trim returns a string without whitespace at the beginning and end");
         // Test that calling '   a   b    '.trim() removes the whitespace at the beginning and end
         // but preserves the whitespace between a and b.
+        t.equal("  a  b  ".trim(), "a  b", ".trim removes whitespace at the beginning and end but not middle");
     });
 });
