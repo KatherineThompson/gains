@@ -1,7 +1,15 @@
 'use strict';
 
 (function($) {
-
+    
+    const view = createView();
+    const model = createModel();
+    const controller = createController();
+    
+    $(function() {
+        controller.init(view, model);
+    })
+    
     /**
      * All DOM manipulation happens here.
      * Adding new elements, listening for events,
@@ -11,10 +19,17 @@
      */
     function createView() {
         // Declare some functions
-
+        function onSquareClick(callback) {
+            $("#board .row div").one("click", callback);
+        }
+        
+        function changePlayerMessage(player, message) {
+            $("#player-num").text(player);
+            $("#message").text(message);
+        }
         // Return those functions
-        return {
-
+        return {onSquareClick: onSquareClick,
+                changePlayerMessage: changePlayerMessage
         }
     }
 
@@ -27,9 +42,18 @@
      */
     function createModel() {
         // Declare some functions
-
+        let playerNum = 1;
+        
+        function changePlayer() {
+            if (playerNum === 1) {
+                playerNum = 2;
+            } else {
+                playerNum = 1;
+            }
+            return playerNum;
+        }
         // Return those functions
-        return {
+        return {changePlayer: changePlayer
 
         }
     }
@@ -37,7 +61,10 @@
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
-
+            view.onSquareClick(function() {
+                view.changePlayerMessage(model.changePlayer());
+                
+            });
         }
 
         // Feel free to declare any other helper functions you may need.

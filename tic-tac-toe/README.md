@@ -59,5 +59,6 @@ You should commit after each one of these steps. You may commit more often if yo
         * If you can win in one move, place a piece in that spot.
         * If you already have a piece on the board, and there is a possible way to construct a win with that piece, place another piece to work towards that win.
         * Otherwise, pick a spot at random and put a piece there.
+1. Add a less opaque version of the X or O when hovering over the square.
 
 Good luck!
