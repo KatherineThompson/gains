@@ -18,3 +18,18 @@
 #board .row .bottom {
     border-bottom-width: 2px;
 }
+
+#board .row div {
+    font-size: 100px;
+    text-align: center;
+    line-height: 200%;
+}
+
+.x {
+    color: #3adb76;
+}
+
+.o {
+    color: #ffae00;
+    font-weight: bold;
+}

@@ -20,16 +20,30 @@
     function createView() {
         // Declare some functions
         function onSquareClick(callback) {
-            $("#board .row div").one("click", callback);
+            $("#board .row div").one("click", function() {
+                const row = $(event.target).attr("row");
+                const column = $(event.target).attr("column");
+                callback(row, column);
+            });
         }
         
         function changePlayerMessage(player, message) {
             $("#player-num").text(player);
             $("#message").text(message);
         }
+        
+        function addMark(player, row, column) {
+            const $square = $("div").filter("[row=" + row + "]").filter("[column=" + column +"]");            
+            if (player === 1) {
+                $square.text("✖").addClass("x");
+            } else {
+                $square.text("🌕").addClass("o");
+            }
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
-                changePlayerMessage: changePlayerMessage
+                changePlayerMessage: changePlayerMessage,
+                addMark: addMark
         }
     }
 
@@ -44,26 +58,30 @@
         // Declare some functions
         let playerNum = 1;
         
+        function getPlayer() {
+            return playerNum;
+        }
+        
         function changePlayer() {
             if (playerNum === 1) {
                 playerNum = 2;
             } else {
                 playerNum = 1;
             }
-            return playerNum;
         }
         // Return those functions
-        return {changePlayer: changePlayer
-
+        return {changePlayer: changePlayer,
+                getPlayer: getPlayer
         }
     }
 
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
-            view.onSquareClick(function() {
-                view.changePlayerMessage(model.changePlayer());
-                
+            view.onSquareClick(function(row, column) {
+                view.addMark(model.getPlayer(), row, column);
+                model.changePlayer();
+                view.changePlayerMessage(model.getPlayer());                
             });
         }
 
