@@ -27,14 +27,19 @@
             });
         }
         
-        function changePlayerMessage(player, message) {
-            $("#player-num").text(player);
+        function changePlayerMessage(isPlayerOne, message) {
+            if (isPlayerOne) {
+                $("#player-num").text("1");
+            } else {
+                $("#player-num").text("2");
+            }
+            
             $("#message").text(message);
         }
         
-        function addMark(player, row, column) {
+        function addMark(isPlayerOne, row, column) {
             const $square = $("div").filter("[row=" + row + "]").filter("[column=" + column +"]");            
-            if (player === 1) {
+            if (isPlayerOne) {
                 $square.text("✖").addClass("x");
             } else {
                 $square.text("🌕").addClass("o");
@@ -56,17 +61,17 @@
      */
     function createModel() {
         // Declare some functions
-        let playerNum = 1;
+        let isPlayerOne = true;
         
         function getPlayer() {
-            return playerNum;
+            return isPlayerOne;
         }
         
         function changePlayer() {
-            if (playerNum === 1) {
-                playerNum = 2;
+            if (isPlayerOne) {
+                isPlayerOne = false;
             } else {
-                playerNum = 1;
+                isPlayerOne = true;
             }
         }
         // Return those functions
