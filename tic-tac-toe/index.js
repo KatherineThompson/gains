@@ -25,8 +25,8 @@
                 if (isFrozen) {
                     return;
                 }
-                const row = $(event.target).attr("row");
-                const column = $(event.target).attr("column");
+                const row = parseInt($(event.target).attr("row"));
+                const column = parseInt($(event.target).attr("column"));
                 callback(row, column);
             });
         }
@@ -41,9 +41,9 @@
             $("#message").text(message);
         }
         
-        function tieMessage() {
+        function setTieMessage() {
             $("#player-num").text("1 & Player 2");
-            $("#message").text("It's a tie");
+            $("#message").text("It's a tie!");
         }
         
         function addMark(isPlayerOne, row, column) {
@@ -60,7 +60,7 @@
                 changePlayerMessage: changePlayerMessage,
                 addMark: addMark,
                 freezeBoard: freezeBoard,
-                tieMessage: tieMessage
+                setTieMessage: setTieMessage
         }
     }
 
@@ -112,6 +112,8 @@
             
             if (isWinner) {
                 return isWinner;
+            } else {
+                isWinner = true;
             }
             
             for (let j = 0; j < sideLength; j++) {
@@ -120,12 +122,13 @@
                     break;
                 }
             }
-            
-            if (isWinner) {
-                return isWinner;
-            }
-            
+                        
             if (row === column) {
+                if (isWinner) {
+                    return isWinner;
+                } else {
+                    isWinner = true;
+                }                
                 for (let k = 0; k < sideLength; k++) {
                     if (board[k][k] !== isPlayerOne) {
                         isWinner = false;
@@ -133,14 +136,15 @@
                     }
                 }
             }
-
-            if (isWinner) {
-                return isWinner;
-            }
-            
+            debugger;
             if (sideLength - 1 === row + column) {
-                for (let l = 0; l < sideLength; l++) {
-                    if (board[sideLength - 1 - l][l] !== isPlayerOne) {
+                if (isWinner) {
+                    return isWinner;
+                } else {
+                    isWinner = true;
+                }                
+                for (let i = 0; i < sideLength; i++) {
+                    if (board[sideLength - 1 - i][i] !== isPlayerOne) {
                         isWinner = false;
                         break;
                     }
@@ -186,7 +190,7 @@
                     view.freezeBoard();
                 } else {
                     if (model.checkTie()) {
-                        view.tieMessage();
+                        view.setTieMessage();
                     } else {
                         model.changePlayer();
                         view.changePlayerMessage(model.getPlayer());
