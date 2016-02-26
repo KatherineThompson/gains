@@ -67,6 +67,16 @@
                 $(square).removeClass("x").removeClass("o");
             });
         }
+        
+        function drawBoard(board) {
+            board.forEach(function(rowValue, rowIndex) {
+                rowValue.forEach(function(columnValue, columnIndex) {
+                    if (columnValue !== null) {
+                        addMark(columnValue, rowIndex, columnIndex);
+                    }
+                })
+            })
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
@@ -74,7 +84,8 @@
                 freezeBoard: freezeBoard,
                 setTieMessage: setTieMessage,
                 onButtonClick: onButtonClick,
-                resetBoard: resetBoard
+                resetBoard: resetBoard,
+                drawBoard: drawBoard
         }
     }
 
@@ -87,38 +98,70 @@
      */
     function createModel() {
         // Declare some functions
-        let isPlayerOne = true;
         
         const sideLength = 3;
-        let board; 
+        
+        let gameState = {
+            isPlayerOne: true,
+            board: undefined
+        } 
         
         function initBoard() {
-            board = [];
+            gameState.board = [];
             for (let i = 0; i < sideLength; i++) {
                 const row = [];
-                for(let j = 0; j < sideLength; j++) {
+                for (let j = 0; j < sideLength; j++) {
                     row.push(null);
                 }
-                board.push(row);
+                gameState.board.push(row);
             }
         }
         
+        function getBoard() {
+            return gameState.board;
+        }
+        
+        function loadGame() {
+            if (localStorage.gameState) {
+                gameState = JSON.parse(localStorage.gameState);
+                return true; 
+            } else {
+                initBoard();
+                saveGame();
+                return false;
+            }
+        }
+        
+        function saveGame() {
+            localStorage.gameState = JSON.stringify(gameState);
+        }
+        
+        function resetGame() {
+            initBoard();
+            gameState.isPlayerOne = true;
+            saveGame();
+        }
+        
         function getPlayer() {
-            return isPlayerOne;
+            return gameState.isPlayerOne;
         }
         
         function changePlayer() {
-            isPlayerOne = !isPlayerOne;
+            gameState.isPlayerOne = !gameState.isPlayerOne;
+            saveGame();
         }
         
         function updateBoard(isPlayerOne, row, column) {
-            board[row][column] = isPlayerOne;
+            gameState.board[row][column] = isPlayerOne;
+            gameState.lastRow = row;
+            gameState.lastColumn = column;
+            saveGame();
         }
         
         function checkWin(isPlayerOne, row, column) {
             let isWinner = true;
             for (let i = 0; i < sideLength; i++) {
-                if (board[row][i] !== isPlayerOne) {
+                if (gameState.board[row][i] !== isPlayerOne) {
                     isWinner = false;
                     break;
                 }
@@ -131,7 +174,7 @@
             }
             
             for (let j = 0; j < sideLength; j++) {
-                if (board[j][column] !== isPlayerOne) {
+                if (gameState.board[j][column] !== isPlayerOne) {
                     isWinner = false;
                     break;
                 }
@@ -144,7 +187,7 @@
                     isWinner = true;
                 }                
                 for (let k = 0; k < sideLength; k++) {
-                    if (board[k][k] !== isPlayerOne) {
+                    if (gameState.board[k][k] !== isPlayerOne) {
                         isWinner = false;
                         break;
                     }
@@ -158,7 +201,7 @@
                     isWinner = true;
                 }                
                 for (let i = 0; i < sideLength; i++) {
-                    if (board[sideLength - 1 - i][i] !== isPlayerOne) {
+                    if (gameState.board[sideLength - 1 - i][i] !== isPlayerOne) {
                         isWinner = false;
                         break;
                     }
@@ -174,11 +217,19 @@
         
         function checkTie() {
             for (let i = 0; i < sideLength; i++) {
-                if (checkForNull(board[i])) {
+                if (checkForNull(gameState.board[i])) {
                     return false;
                 }
             }
             return true;
+        }
+        
+        function getLastRow() {
+            return gameState.lastRow;
+        }
+        
+        function getLastColumn() {
+            return gameState.lastColumn;
         }
 
 
@@ -187,43 +238,70 @@
                 getPlayer: getPlayer,
                 checkWin: checkWin,
                 updateBoard: updateBoard,
-                initBoard: initBoard,
-                checkTie: checkTie
+                checkTie: checkTie,
+                resetGame: resetGame,
+                loadGame: loadGame,
+                getBoard: getBoard,
+                getLastRow: getLastRow,
+                getLastColumn: getLastColumn
               }
     }
     
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
-            model.initBoard();
+            const isInProgess = model.loadGame();
+            view.drawBoard(model.getBoard());
+            if (isInProgess) {
+                setUpPlayerMessage();
+            }
+
             view.onSquareClick(function(row, column) {
                 const currentPlayer = model.getPlayer();
                 view.addMark(currentPlayer, row, column);
-                model.updateBoard(currentPlayer, row, column);              
-                if (model.checkWin(currentPlayer, row, column)) {
-                    view.changePlayerMessage(currentPlayer, "You've won!");
-                    view.freezeBoard();
-                } else {
-                    if (model.checkTie()) {
-                        view.setTieMessage();
-                    } else {
-                        model.changePlayer();
-                        view.changePlayerMessage(model.getPlayer());
-                    }
-                }                
+                model.updateBoard(currentPlayer, row, column);
+                if(!checkForEnd(currentPlayer, row, column)) {
+                    endTurn();
+                }              
             });
+            
             view.onButtonClick(function() {
-                model.initBoard();
+                model.resetGame();
                 view.resetBoard();
-                if (!model.getPlayer) {
-                    model.changePlayer();
-                }
                 view.changePlayerMessage(model.getPlayer(), "Pick a square");               
             });
         }
+        
+        function setUpPlayerMessage() {
+
+            const previousPlayer = model.getPlayer();
+            const lastRow = model.getLastRow();
+            const lastColumn = model.getLastColumn();
+            const isEnded = lastRow && lastColumn && checkForEnd(previousPlayer, lastRow, lastColumn);
+            
+            if (!isEnded) {
+                view.changePlayerMessage(model.getPlayer(), "Pick a square");
+            }
+        }
 
         // Feel free to declare any other helper functions you may need.
-
+        function checkForEnd(player, row, column) {
+            if (model.checkWin(player, row, column)) {
+                view.changePlayerMessage(player, "You've won!");
+                view.freezeBoard();
+                return true;
+            } else if (model.checkTie()){
+                view.setTieMessage();
+                return true;
+            }
+            return false;
+        }
+        
+        function endTurn() {
+            model.changePlayer();
+            view.changePlayerMessage(model.getPlayer());           
+        }
+        
         return {init};
     }
 
