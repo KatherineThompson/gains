@@ -29,7 +29,15 @@
     color: #3adb76;
 }
 
+.x::after {
+    content: "✖";
+}
+
 .o {
     color: #ffae00;
     font-weight: bold;
+}
+
+.o::after {
+    content: "🌕";
 }

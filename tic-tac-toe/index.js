@@ -19,8 +19,12 @@
      */
     function createView() {
         // Declare some functions
+        let isFrozen = false;
         function onSquareClick(callback) {
             $("#board .row div").one("click", function() {
+                if (isFrozen) {
+                    return;
+                }
                 const row = $(event.target).attr("row");
                 const column = $(event.target).attr("column");
                 callback(row, column);
@@ -37,18 +41,26 @@
             $("#message").text(message);
         }
         
+        function tieMessage() {
+            $("#player-num").text("1 & Player 2");
+            $("#message").text("It's a tie");
+        }
+        
         function addMark(isPlayerOne, row, column) {
             const $square = $("div").filter("[row=" + row + "]").filter("[column=" + column +"]");            
-            if (isPlayerOne) {
-                $square.text("✖").addClass("x");
-            } else {
-                $square.text("🌕").addClass("o");
-            }
+            const className = isPlayerOne ? "x" : "o";
+            $square.addClass(className);
+        }
+        
+        function freezeBoard() {
+            isFrozen = true;
         }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
-                addMark: addMark
+                addMark: addMark,
+                freezeBoard: freezeBoard,
+                tieMessage: tieMessage
         }
     }
 
@@ -63,30 +75,123 @@
         // Declare some functions
         let isPlayerOne = true;
         
+        const sideLength = 3;
+        const board = []; 
+        
+        function initBoard() {
+            for (let i = 0; i < sideLength; i++) {
+                const row = [];
+                for(let j = 0; j < sideLength; j++) {
+                    row.push(null);
+                }
+                board.push(row);
+            }
+        }
+        
         function getPlayer() {
             return isPlayerOne;
         }
         
         function changePlayer() {
-            if (isPlayerOne) {
-                isPlayerOne = false;
-            } else {
-                isPlayerOne = true;
-            }
+            isPlayerOne = !isPlayerOne;
         }
+        
+        function updateBoard(isPlayerOne, row, column) {
+            board[row][column] = isPlayerOne;
+            console.log(board);
+        }
+        
+        function checkWin(isPlayerOne, row, column) {
+            let isWinner = true;
+            for (let i = 0; i < sideLength; i++) {
+                if (board[row][i] !== isPlayerOne) {
+                    isWinner = false;
+                    break;
+                }
+            }
+            
+            if (isWinner) {
+                return isWinner;
+            }
+            
+            for (let j = 0; j < sideLength; j++) {
+                if (board[j][column] !== isPlayerOne) {
+                    isWinner = false;
+                    break;
+                }
+            }
+            
+            if (isWinner) {
+                return isWinner;
+            }
+            
+            if (row === column) {
+                for (let k = 0; k < sideLength; k++) {
+                    if (board[k][k] !== isPlayerOne) {
+                        isWinner = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isWinner) {
+                return isWinner;
+            }
+            
+            if (sideLength - 1 === row + column) {
+                for (let l = 0; l < sideLength; l++) {
+                    if (board[sideLength - 1 - l][l] !== isPlayerOne) {
+                        isWinner = false;
+                        break;
+                    }
+                }
+            }
+            
+            return isWinner;
+        }
+        
+        function checkTie() {
+            let isTie = true;
+            for (let i = 0; i < sideLength; i++) {
+                for(let j = 0; j < sideLength; j++) {
+                    if (board[i][j] === null) {
+                        isTie = false;
+                        break;
+                    }
+                }
+            }
+            return isTie;
+        }
+
         // Return those functions
         return {changePlayer: changePlayer,
-                getPlayer: getPlayer
+                getPlayer: getPlayer,
+                checkWin: checkWin,
+                updateBoard: updateBoard,
+                initBoard: initBoard,
+                checkTie: checkTie
         }
     }
-
+    
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
+            model.initBoard();
             view.onSquareClick(function(row, column) {
-                view.addMark(model.getPlayer(), row, column);
-                model.changePlayer();
-                view.changePlayerMessage(model.getPlayer());                
+                const currentPlayer = model.getPlayer();
+                view.addMark(currentPlayer, row, column);
+                model.updateBoard(currentPlayer, row, column);              
+                if (model.checkWin(currentPlayer, row, column)) {
+                    view.changePlayerMessage(currentPlayer, "You've won!");
+                    view.freezeBoard();
+                } else {
+                    if (model.checkTie()) {
+                        view.tieMessage();
+                    } else {
+                        model.changePlayer();
+                        view.changePlayerMessage(model.getPlayer());
+                    }
+                }                
             });
         }
 
