@@ -21,12 +21,13 @@
         // Declare some functions
         let isFrozen = false;
         function onSquareClick(callback) {
-            $("#board .row div").one("click", function() {
-                if (isFrozen) {
+            $("#board .row div").on("click", function() {
+                const $clickedSquare = $(event.target);
+                if (isFrozen || $clickedSquare.hasClass("x") || $clickedSquare.hasClass("o")) {
                     return;
                 }
-                const row = parseInt($(event.target).attr("row"));
-                const column = parseInt($(event.target).attr("column"));
+                const row = parseInt($clickedSquare.attr("row"));
+                const column = parseInt($clickedSquare.attr("column"));
                 callback(row, column);
             });
         }
@@ -47,7 +48,7 @@
         }
         
         function addMark(isPlayerOne, row, column) {
-            const $square = $("div").filter("[row=" + row + "]").filter("[column=" + column +"]");            
+            const $square = $("#board div").filter("[row=" + row + "]").filter("[column=" + column +"]");            
             const className = isPlayerOne ? "x" : "o";
             $square.addClass(className);
         }
@@ -55,12 +56,25 @@
         function freezeBoard() {
             isFrozen = true;
         }
+        
+        function onButtonClick(callback) {
+            $("button").click(callback);
+        }
+        
+        function resetBoard() {
+            isFrozen = false;
+            $("#board div").filter("[row]").filter("[column]").each(function(index, square) {
+                $(square).removeClass("x").removeClass("o");
+            });
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
                 addMark: addMark,
                 freezeBoard: freezeBoard,
-                setTieMessage: setTieMessage
+                setTieMessage: setTieMessage,
+                onButtonClick: onButtonClick,
+                resetBoard: resetBoard
         }
     }
 
@@ -76,9 +90,10 @@
         let isPlayerOne = true;
         
         const sideLength = 3;
-        const board = []; 
+        let board; 
         
         function initBoard() {
+            board = [];
             for (let i = 0; i < sideLength; i++) {
                 const row = [];
                 for(let j = 0; j < sideLength; j++) {
@@ -98,7 +113,6 @@
         
         function updateBoard(isPlayerOne, row, column) {
             board[row][column] = isPlayerOne;
-            console.log(board);
         }
         
         function checkWin(isPlayerOne, row, column) {
@@ -136,7 +150,7 @@
                     }
                 }
             }
-            debugger;
+ 
             if (sideLength - 1 === row + column) {
                 if (isWinner) {
                     return isWinner;
@@ -154,18 +168,19 @@
             return isWinner;
         }
         
+        function checkForNull(array) {
+            return array.some(elem => elem === null);
+        }
+        
         function checkTie() {
-            let isTie = true;
             for (let i = 0; i < sideLength; i++) {
-                for(let j = 0; j < sideLength; j++) {
-                    if (board[i][j] === null) {
-                        isTie = false;
-                        break;
-                    }
+                if (checkForNull(board[i])) {
+                    return false;
                 }
             }
-            return isTie;
+            return true;
         }
+
 
         // Return those functions
         return {changePlayer: changePlayer,
@@ -174,7 +189,7 @@
                 updateBoard: updateBoard,
                 initBoard: initBoard,
                 checkTie: checkTie
-        }
+              }
     }
     
     function createController() {
@@ -196,6 +211,14 @@
                         view.changePlayerMessage(model.getPlayer());
                     }
                 }                
+            });
+            view.onButtonClick(function() {
+                model.initBoard();
+                view.resetBoard();
+                if (!model.getPlayer) {
+                    model.changePlayer();
+                }
+                view.changePlayerMessage(model.getPlayer(), "Pick a square");               
             });
         }
 

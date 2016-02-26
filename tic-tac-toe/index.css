@@ -17,6 +17,7 @@
 
 #board .row .bottom {
     border-bottom-width: 2px;
+    margin-bottom: .25em;
 }
 
 #board .row div {
