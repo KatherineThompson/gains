@@ -17,7 +17,7 @@
 
 #board .row .bottom {
     border-bottom-width: 2px;
-    margin-bottom: .25em;
+    margin-bottom: 2%;
 }
 
 #board .row div {
@@ -27,7 +27,7 @@
 }
 
 .x {
-    color: #3adb76;
+    color: #8545D5;
 }
 
 .x::after {
@@ -41,4 +41,14 @@
 
 .o::after {
     content: "🌕";
+}
+
+.game-over {
+    background-color: #dddddd;
+    opacity: 0.5;
+}
+
+.winning-square {
+    background-color: #3adb76;
+    opacity: .75;
 }

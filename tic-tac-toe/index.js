@@ -64,8 +64,9 @@
         function resetBoard() {
             isFrozen = false;
             $("#board div").filter("[row]").filter("[column]").each(function(index, square) {
-                $(square).removeClass("x").removeClass("o");
+                $(square).removeClass("x").removeClass("o").removeClass("winning-square");
             });
+            $("#board .row div").removeClass("game-over");
         }
         
         function drawBoard(board) {
@@ -77,6 +78,23 @@
                 })
             })
         }
+        
+        function addWinEffects(winningSquares) {
+            $("#board .row div").addClass("game-over");
+            winningSquares.forEach(function(square) {
+                const $square = $("#board div").filter("[row=" + square.row + "]").filter("[column=" + square.column +"]");
+                $square.addClass("winning-square").animate({
+                    "font-size": "125px",
+                    "line-height": "150%"
+                }, 1000, function() {
+                    $square.animate({
+                        "font-size": "100px",
+                        "line-height": "200%"
+                    }, 1000);
+                });
+            })
+            
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
@@ -85,7 +103,8 @@
                 setTieMessage: setTieMessage,
                 onButtonClick: onButtonClick,
                 resetBoard: resetBoard,
-                drawBoard: drawBoard
+                drawBoard: drawBoard,
+                addWinEffects: addWinEffects
         }
     }
 
@@ -159,56 +178,68 @@
         }
         
         function checkWin(isPlayerOne, row, column) {
-            let isWinner = true;
+            let winningSquares = [];
             for (let i = 0; i < sideLength; i++) {
                 if (gameState.board[row][i] !== isPlayerOne) {
-                    isWinner = false;
+                     winningSquares = null;
                     break;
+                } else {
+                    const square = {row: row, column: i};
+                    winningSquares.push(square);
                 }
             }
             
-            if (isWinner) {
-                return isWinner;
+            if (winningSquares) {
+                return winningSquares;
             } else {
-                isWinner = true;
+                winningSquares = [];
             }
             
             for (let j = 0; j < sideLength; j++) {
                 if (gameState.board[j][column] !== isPlayerOne) {
-                    isWinner = false;
+                    winningSquares = null;
                     break;
+                } else {
+                    const square = {row: j, column: column};
+                    winningSquares.push(square);
                 }
             }
                         
             if (row === column) {
-                if (isWinner) {
-                    return isWinner;
+                if (winningSquares) {
+                    return winningSquares;
                 } else {
-                    isWinner = true;
+                    winningSquares = [];
                 }                
                 for (let k = 0; k < sideLength; k++) {
                     if (gameState.board[k][k] !== isPlayerOne) {
-                        isWinner = false;
+                        winningSquares = null;
                         break;
+                    } else {
+                        const square = {row: k, column: k};
+                        winningSquares.push(square);
                     }
                 }
             }
  
             if (sideLength - 1 === row + column) {
-                if (isWinner) {
-                    return isWinner;
+                if (winningSquares) {
+                    return winningSquares;
                 } else {
-                    isWinner = true;
+                    winningSquares = [];
                 }                
                 for (let i = 0; i < sideLength; i++) {
                     if (gameState.board[sideLength - 1 - i][i] !== isPlayerOne) {
-                        isWinner = false;
+                        winningSquares = null;
                         break;
+                    } else {
+                        const square = {row:sideLength - 1 - i, column: i};
+                        winningSquares.push(square);
                     }
                 }
             }
             
-            return isWinner;
+            return winningSquares;
         }
         
         function checkForNull(array) {
@@ -250,6 +281,7 @@
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
+            debugger;
             const isInProgess = model.loadGame();
             view.drawBoard(model.getBoard());
             if (isInProgess) {
@@ -264,7 +296,7 @@
                     endTurn();
                 }              
             });
-            
+               
             view.onButtonClick(function() {
                 model.resetGame();
                 view.resetBoard();
@@ -277,7 +309,8 @@
             const previousPlayer = model.getPlayer();
             const lastRow = model.getLastRow();
             const lastColumn = model.getLastColumn();
-            const isEnded = lastRow && lastColumn && checkForEnd(previousPlayer, lastRow, lastColumn);
+            const hasLastRowAndColumn = lastRow >= 0 && lastColumn >= 0;
+            const isEnded = hasLastRowAndColumn && checkForEnd(previousPlayer, lastRow, lastColumn);
             
             if (!isEnded) {
                 view.changePlayerMessage(model.getPlayer(), "Pick a square");
@@ -286,8 +319,10 @@
 
         // Feel free to declare any other helper functions you may need.
         function checkForEnd(player, row, column) {
-            if (model.checkWin(player, row, column)) {
+            const winningSquares = model.checkWin(player, row, column)
+            if (winningSquares) {
                 view.changePlayerMessage(player, "You've won!");
+                view.addWinEffects(winningSquares);
                 view.freezeBoard();
                 return true;
             } else if (model.checkTie()){

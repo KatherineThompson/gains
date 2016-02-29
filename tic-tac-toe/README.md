@@ -44,9 +44,9 @@ You should commit after each one of these steps. You may commit more often if yo
     * If there is a tie, display that as well.
 1. Add a button to reset the game back to the initial state.
 1. Save and load the current game state in local storage.
+1. After the game is won, highlight the winning line of pieces in some way.
 1. Make the app look good on mobile.
     * Make the app usable via touch.
-1. After the game is won, highlight the winning line of pieces in some way.
 1. As players keep playing and hitting "reset" to start new games, keep a record of past games.
     * Display how many games each player has won.
     * Display how many games have ended in a tie.
