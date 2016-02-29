@@ -80,6 +80,7 @@
         }
         
         function addWinEffects(winningSquares) {
+            debugger;
             $("#board .row div").addClass("game-over");
             winningSquares.forEach(function(square) {
                 const $square = $("#board div").filter("[row=" + square.row + "]").filter("[column=" + square.column +"]");
@@ -281,7 +282,7 @@
     function createController() {
         // Bootstrap the app.
         function init(view, model) {
-            debugger;
+
             const isInProgess = model.loadGame();
             view.drawBoard(model.getBoard());
             if (isInProgess) {
