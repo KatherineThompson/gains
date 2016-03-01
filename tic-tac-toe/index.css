@@ -3,7 +3,7 @@
     height: 100%;
 }
 
-#board {
+#board, #board div {
     height: 600px;
 }
 
@@ -51,12 +51,18 @@
     content: "🌕";
 }
 
+.game-over.winning-square {
+    background-color: #3adb76;
+    opacity: .75;
+}
+
 .game-over {
     background-color: #dddddd;
     opacity: 0.5;
 }
 
-.winning-square {
-    background-color: #3adb76;
-    opacity: .75;
+
+p{
+    color: slategray;
+    font-size: .95em;
 }

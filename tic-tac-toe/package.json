@@ -6,6 +6,6 @@
     "node-static": "^0.7.7"
   },
   "scripts": {
-      "start": "static"
+      "start": "static -a 0.0.0.0"
   }
 }

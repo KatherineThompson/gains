@@ -95,6 +95,12 @@
             })
             
         }
+        
+        function updateTallies(currentTallies) {
+            $("#player-one-wins").text(currentTallies.playerOne);
+            $("#player-two-wins").text(currentTallies.playerTwo);
+            $("#tied-games").text(currentTallies.ties);
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
@@ -104,7 +110,8 @@
                 onButtonClick: onButtonClick,
                 resetBoard: resetBoard,
                 drawBoard: drawBoard,
-                addWinEffects: addWinEffects
+                addWinEffects: addWinEffects,
+                updateTallies: updateTallies
         }
     }
 
@@ -122,7 +129,10 @@
         
         let gameState = {
             isPlayerOne: true,
-            board: undefined
+            board: undefined,
+            playerOneWins: 0,
+            playerTwoWins: 0,
+            ties: 0
         } 
         
         function initBoard() {
@@ -177,7 +187,16 @@
             saveGame();
         }
         
-        function checkWin(isPlayerOne, row, column) {
+        function checkWin(isPlayerOne, row, column, shouldUpdateTallies) {
+            const winner = isPlayerOne ? "playerOneWins" : "playerTwoWins";
+            
+            function save() {
+                if (shouldUpdateTallies) {
+                    gameState[winner]++;
+                    saveGame();
+                }
+            }
+            
             let winningSquares = [];
             for (let i = 0; i < sideLength; i++) {
                 if (gameState.board[row][i] !== isPlayerOne) {
@@ -190,6 +209,7 @@
             }
             
             if (winningSquares) {
+                save();
                 return winningSquares;
             } else {
                 winningSquares = [];
@@ -207,6 +227,7 @@
                         
             if (row === column) {
                 if (winningSquares) {
+                    save();
                     return winningSquares;
                 } else {
                     winningSquares = [];
@@ -224,6 +245,7 @@
  
             if (sideLength - 1 === row + column) {
                 if (winningSquares) {
+                    save();
                     return winningSquares;
                 } else {
                     winningSquares = [];
@@ -238,7 +260,9 @@
                     }
                 }
             }
-            
+            if (winningSquares) {
+                save();
+            }
             return winningSquares;
         }
         
@@ -246,11 +270,16 @@
             return array.some(elem => elem === null);
         }
         
-        function checkTie() {
+        function checkTie(shouldUpdateTallies) {
             for (let i = 0; i < sideLength; i++) {
                 if (checkForNull(gameState.board[i])) {
                     return false;
                 }
+            }
+            
+            if (shouldUpdateTallies) {
+                gameState.ties++;
+                saveGame();
             }
             return true;
         }
@@ -261,6 +290,10 @@
         
         function getLastColumn() {
             return gameState.lastColumn;
+        }
+        
+        function getTallies() {
+            return {playerOne: gameState.playerOneWins, playerTwo: gameState.playerTwoWins, ties: gameState.ties};
         }
 
 
@@ -274,7 +307,8 @@
                 loadGame: loadGame,
                 getBoard: getBoard,
                 getLastRow: getLastRow,
-                getLastColumn: getLastColumn
+                getLastColumn: getLastColumn,
+                getTallies: getTallies
               }
     }
     
@@ -285,14 +319,14 @@
             const isInProgess = model.loadGame();
             view.drawBoard(model.getBoard());
             if (isInProgess) {
-                setUpPlayerMessage();
+                restoreBoard();
             }
 
             view.onSquareClick(function(row, column) {
                 const currentPlayer = model.getPlayer();
                 view.addMark(currentPlayer, row, column);
                 model.updateBoard(currentPlayer, row, column);
-                if(!checkForEnd(currentPlayer, row, column)) {
+                if(!updateViewIfGameOver(currentPlayer, row, column, true)) {
                     endTurn();
                 }              
             });
@@ -304,13 +338,13 @@
             });
         }
         
-        function setUpPlayerMessage() {
+        function restoreBoard() {
 
             const previousPlayer = model.getPlayer();
             const lastRow = model.getLastRow();
             const lastColumn = model.getLastColumn();
             const hasLastRowAndColumn = lastRow >= 0 && lastColumn >= 0;
-            const isEnded = hasLastRowAndColumn && checkForEnd(previousPlayer, lastRow, lastColumn);
+            const isEnded = hasLastRowAndColumn && updateViewIfGameOver(previousPlayer, lastRow, lastColumn, false);
             
             if (!isEnded) {
                 view.changePlayerMessage(model.getPlayer(), "Pick a square");
@@ -318,17 +352,21 @@
         }
 
         // Feel free to declare any other helper functions you may need.
-        function checkForEnd(player, row, column) {
-            const winningSquares = model.checkWin(player, row, column)
+        function updateViewIfGameOver(player, row, column, shouldUpdateTallies) {
+            const winningSquares = model.checkWin(player, row, column, shouldUpdateTallies);
+            
             if (winningSquares) {
                 view.changePlayerMessage(player, "You've won!");
                 view.addWinEffects(winningSquares);
+                view.updateTallies(model.getTallies());
                 view.freezeBoard();
                 return true;
-            } else if (model.checkTie()){
+            } else if (model.checkTie(shouldUpdateTallies)){
                 view.setTieMessage();
+                view.updateTallies(model.getTallies());
                 return true;
             }
+            view.updateTallies(model.getTallies());
             return false;
         }
         
