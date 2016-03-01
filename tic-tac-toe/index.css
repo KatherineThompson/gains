@@ -1,6 +1,14 @@
 #board .row .columns {
     border: 1px solid #2199e8;
-    height: 200px;
+    height: 100%;
+}
+
+#board {
+    height: 600px;
+}
+
+#board .row {
+    height: 33%;
 }
 
 #board .row .top {

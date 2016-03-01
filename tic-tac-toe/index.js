@@ -80,7 +80,6 @@
         }
         
         function addWinEffects(winningSquares) {
-            debugger;
             $("#board .row div").addClass("game-over");
             winningSquares.forEach(function(square) {
                 const $square = $("#board div").filter("[row=" + square.row + "]").filter("[column=" + square.column +"]");
