@@ -61,5 +61,6 @@ You should commit after each one of these steps. You may commit more often if yo
         * Otherwise, pick a spot at random and put a piece there.
 1. Add a less opaque version of the X or O when hovering over the square.
 1. Add ability to flip coin to determine who goes first
+1. Add game over state to tied games
 
 Good luck!

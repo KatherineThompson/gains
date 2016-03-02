@@ -57,8 +57,12 @@
             isFrozen = true;
         }
         
-        function onButtonClick(callback) {
-            $("button").click(callback);
+        function onResetButtonClick(callback) {
+            $("#reset-button").click(callback);
+        }
+        
+        function onLuckyButtonClick(callback) {
+            $("#lucky-button").click(callback);
         }
         
         function resetBoard() {
@@ -107,11 +111,12 @@
                 addMark: addMark,
                 freezeBoard: freezeBoard,
                 setTieMessage: setTieMessage,
-                onButtonClick: onButtonClick,
+                onResetButtonClick: onResetButtonClick,
                 resetBoard: resetBoard,
                 drawBoard: drawBoard,
                 addWinEffects: addWinEffects,
-                updateTallies: updateTallies
+                updateTallies: updateTallies,
+                onLuckyButtonClick: onLuckyButtonClick
         }
     }
 
@@ -295,7 +300,18 @@
         function getTallies() {
             return {playerOne: gameState.playerOneWins, playerTwo: gameState.playerTwoWins, ties: gameState.ties};
         }
-
+        
+        function getAvailableSquares() {
+            const availableSquares = [];
+            for (let i = 0; i < sideLength; i++) {
+                for (let j = 0; j < sideLength; j++) {
+                    if (gameState.board[i][j] === null) {
+                        availableSquares.push({row: i, column: j});
+                    }
+                }
+            }
+            return availableSquares;
+        }
 
         // Return those functions
         return {changePlayer: changePlayer,
@@ -308,7 +324,8 @@
                 getBoard: getBoard,
                 getLastRow: getLastRow,
                 getLastColumn: getLastColumn,
-                getTallies: getTallies
+                getTallies: getTallies,
+                getAvailableSquares: getAvailableSquares
               }
     }
     
@@ -323,19 +340,29 @@
             }
 
             view.onSquareClick(function(row, column) {
-                const currentPlayer = model.getPlayer();
-                view.addMark(currentPlayer, row, column);
-                model.updateBoard(currentPlayer, row, column);
-                if(!updateViewIfGameOver(currentPlayer, row, column, true)) {
-                    endTurn();
-                }              
+                takeTurn(row, column);              
             });
                
-            view.onButtonClick(function() {
+            view.onResetButtonClick(function() {
                 model.resetGame();
                 view.resetBoard();
                 view.changePlayerMessage(model.getPlayer(), "Pick a square");               
             });
+            
+            view.onLuckyButtonClick(function() {
+                const availableSquares = model.getAvailableSquares();
+                const currentSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+                takeTurn(currentSquare.row, currentSquare.column);                
+            });
+        }
+        
+        function takeTurn(row, column) {
+            const currentPlayer = model.getPlayer();
+            view.addMark(currentPlayer, row, column);
+            model.updateBoard(currentPlayer, row, column);
+            if(!updateViewIfGameOver(currentPlayer, row, column, true)) {
+                endTurn();
+            }                      
         }
         
         function restoreBoard() {
