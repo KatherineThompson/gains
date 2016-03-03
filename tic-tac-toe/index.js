@@ -303,14 +303,95 @@
         
         function getAvailableSquares() {
             const availableSquares = [];
-            for (let i = 0; i < sideLength; i++) {
-                for (let j = 0; j < sideLength; j++) {
-                    if (gameState.board[i][j] === null) {
-                        availableSquares.push({row: i, column: j});
+            for (let rowIndex = 0; rowIndex < sideLength; rowIndex++) {
+                for (let colIndex = 0; colIndex < sideLength; colIndex++) {
+                    if (gameState.board[rowIndex][colIndex] === null) {
+                        availableSquares.push({row: rowIndex, column: colIndex});
                     }
                 }
             }
             return availableSquares;
+        }
+        
+        function findAlmostWin(isPlayerOne) {
+            let almostWin = [];
+            const winningSquare = {};
+            
+            function createWinningSquare(isRowCalc, isColumnCalc, currentIterationVal) {
+                function calcVal(valName) {
+                    let calcVal = sideLength;
+                    almostWin.forEach(function(val) {
+                        calcVal -= val;
+                    });
+                    winningSquare[valName] = calcVal;
+                }
+                
+                if (!isRowCalc && isColumnCalc) {
+                    winningSquare.row = currentIterationVal;
+                    calcVal("column");
+                }  else if (isRowCalc && isColumnCalc === null) {
+                    calcVal("row");
+                    winningSquare.column = sideLength - 1 - winningSquare.row;
+                }  else if (isRowCalc && !isColumnCalc) {
+                    winningSquare.column = currentIterationVal;
+                    calcVal("row");
+                } else if (isRowCalc && isColumnCalc) {
+                    calcVal("row");
+                    calcVal("column");
+                }     
+            }
+            
+            for (let i = 0; i < sideLength; i++) {
+                for (let j = 0; j < sideLength; j++) {
+                    if (gameState.board[i][j] === isPlayerOne) {
+                        almostWin.push(j);
+                    }
+                }
+                if (almostWin.length === sideLength - 1) {
+                    createWinningSquare(false, true, i);
+                    return winningSquare;
+                } else {
+                    almostWin = [];
+                }
+            }
+            
+            for (let i = 0; i < sideLength; i++) {
+                for(let j = 0; j < sideLength; j++) {
+                    if (gameState.board[j][i] === isPlayerOne) {
+                        almostWin.push(j);
+                    }
+                }
+                if (almostWin.length === sideLength - 1) {
+                    createWinningSquare(true, false, i);
+                    return winningSquare;
+                } else {
+                    almostWin = [];
+                }
+            }
+            
+            for (let i = 0; i < sideLength; i++) {
+                if (gameState.board[i][i] === isPlayerOne) {
+                    almostWin.push(i);
+                }
+            }
+            
+            if (almostWin.length === sideLength - 1) {
+                createWinningSquare(true, true, null);
+                return winningSquare;
+            } else {
+                almostWin = [];
+            }
+            
+            for (let i = 0; i < sideLength; i++) {
+                if (gameState.board[i][sideLength - 1 - i] === isPlayerOne) {
+                    almostWin.push(i);
+                }
+            }
+            
+            if (almostWin.length === sideLength - 1) {
+                createWinningSquare(true, null, null);
+            }
+            return winningSquare;
         }
 
         // Return those functions
@@ -325,7 +406,8 @@
                 getLastRow: getLastRow,
                 getLastColumn: getLastColumn,
                 getTallies: getTallies,
-                getAvailableSquares: getAvailableSquares
+                getAvailableSquares: getAvailableSquares,
+                findAlmostWin: findAlmostWin
               }
     }
     
@@ -339,9 +421,7 @@
                 restoreBoard();
             }
 
-            view.onSquareClick(function(row, column) {
-                takeTurn(row, column);              
-            });
+            view.onSquareClick(takeTurn);
                
             view.onResetButtonClick(function() {
                 model.resetGame();
@@ -350,8 +430,11 @@
             });
             
             view.onLuckyButtonClick(function() {
-                const availableSquares = model.getAvailableSquares();
-                const currentSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+                let currentSquare = model.findAlmostWin(model.getPlayer());
+                if (currentSquare.row === undefined || currentSquare.column === undefined) {
+                    const availableSquares = model.getAvailableSquares();
+                    currentSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+                }
                 takeTurn(currentSquare.row, currentSquare.column);                
             });
         }
