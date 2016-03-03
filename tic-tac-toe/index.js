@@ -422,7 +422,10 @@
         
         function getBestSpace(isPlayerOne) {
             const sortedArrays = groupArrays(findWinningSpaces(isPlayerOne));
-            
+            if (sortedArrays.length < 1) {
+                const available = getAvailableSquares();
+                return available[Math.floor(Math.random() * available.length)];
+            }
             for (let i = 0; i < sortedArrays.length; i++) {
                 if (sortedArrays[i]) {
                     const sameLengthArrays = sortedArrays[i];
