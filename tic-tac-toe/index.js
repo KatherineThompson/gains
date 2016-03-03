@@ -313,85 +313,119 @@
             return availableSquares;
         }
         
-        function findAlmostWin(isPlayerOne) {
-            let almostWin = [];
-            const winningSquare = {};
+        function findWinningSpaces(isPlayerOne) {
+            const possibleWins = [];
             
-            function createWinningSquare(isRowCalc, isColumnCalc, currentIterationVal) {
-                function calcVal(valName) {
-                    let calcVal = sideLength;
-                    almostWin.forEach(function(val) {
-                        calcVal -= val;
-                    });
-                    winningSquare[valName] = calcVal;
+            for (let rowIndex = 0; rowIndex < sideLength; rowIndex++) {
+                const openSpaces = [];
+                let opposingPlayerSpaces = false;
+                
+                for (let colIndex = 0; colIndex < sideLength; colIndex++) {
+                    if (gameState.board[rowIndex][colIndex] === null) {
+                        openSpaces.push({row: rowIndex, column: colIndex});
+                    } else if (gameState.board[rowIndex][colIndex] === !isPlayerOne) {
+                        opposingPlayerSpaces = true;
+                        break;
+                    }
                 }
                 
-                if (!isRowCalc && isColumnCalc) {
-                    winningSquare.row = currentIterationVal;
-                    calcVal("column");
-                }  else if (isRowCalc && isColumnCalc === null) {
-                    calcVal("row");
-                    winningSquare.column = sideLength - 1 - winningSquare.row;
-                }  else if (isRowCalc && !isColumnCalc) {
-                    winningSquare.column = currentIterationVal;
-                    calcVal("row");
-                } else if (isRowCalc && isColumnCalc) {
-                    calcVal("row");
-                    calcVal("column");
-                }     
-            }
-            
-            for (let i = 0; i < sideLength; i++) {
-                for (let j = 0; j < sideLength; j++) {
-                    if (gameState.board[i][j] === isPlayerOne) {
-                        almostWin.push(j);
+                if (!opposingPlayerSpaces) {
+                    if (openSpaces.length === 1) {
+                        return [openSpaces];
+                    } else {
+                        possibleWins.push(openSpaces);
                     }
                 }
-                if (almostWin.length === sideLength - 1) {
-                    createWinningSquare(false, true, i);
-                    return winningSquare;
-                } else {
-                    almostWin = [];
-                }
             }
             
-            for (let i = 0; i < sideLength; i++) {
-                for(let j = 0; j < sideLength; j++) {
-                    if (gameState.board[j][i] === isPlayerOne) {
-                        almostWin.push(j);
+            for (let colIndex = 0; colIndex < sideLength; colIndex++) {
+                const openSpaces = [];
+                let opposingPlayerSpaces = false;
+                
+                for (let rowIndex = 0; rowIndex < sideLength; rowIndex++) {
+                    if (gameState.board[rowIndex][colIndex] === null) {
+                        openSpaces.push({row: rowIndex, column: colIndex});
+                    } else if (gameState.board[rowIndex][colIndex] === !isPlayerOne) {
+                        opposingPlayerSpaces = true;
+                        break;
                     }
                 }
-                if (almostWin.length === sideLength - 1) {
-                    createWinningSquare(true, false, i);
-                    return winningSquare;
+                
+                if (!opposingPlayerSpaces) {
+                    if (openSpaces.length === 1) {
+                        return [openSpaces];
+                    } else {
+                        possibleWins.push(openSpaces);
+                    }
+                }
+            }
+
+            const openSpacesDiagonal = [];
+            let opposingPlayerSpacesDiagonal = false;
+            
+            for (let rowColIndex = 0; rowColIndex < sideLength; rowColIndex++) {
+                
+                if (gameState.board[rowColIndex][rowColIndex] === null) {
+                    openSpacesDiagonal.push({row: rowColIndex, column: rowColIndex});
+                } else if (gameState.board[rowColIndex][rowColIndex] === !isPlayerOne) {
+                    opposingPlayerSpacesDiagonal = true;
+                    break;
+                }
+            }
+            
+            if (!opposingPlayerSpacesDiagonal) {
+                if (openSpacesDiagonal.length === 1) {
+                    return [openSpacesDiagonal];
                 } else {
-                    almostWin = [];
+                    possibleWins.push(openSpacesDiagonal);
                 }
             }
             
-            for (let i = 0; i < sideLength; i++) {
-                if (gameState.board[i][i] === isPlayerOne) {
-                    almostWin.push(i);
+            const openSpacesReverseDiagonal = [];
+            let opposingPlayerSpacesReverseDiagonal = false;
+            
+            for (let rowIndex = 0; rowIndex < sideLength; rowIndex++) {
+                if (gameState.board[rowIndex][sideLength - 1 - rowIndex] === null) {
+                    openSpacesReverseDiagonal.push({row: rowIndex, column: sideLength - 1 - rowIndex});
+                } else if (gameState.board[rowIndex][sideLength - 1 - rowIndex] === !isPlayerOne) {
+                    opposingPlayerSpacesReverseDiagonal = true;
+                    break;
                 }
             }
             
-            if (almostWin.length === sideLength - 1) {
-                createWinningSquare(true, true, null);
-                return winningSquare;
+            if (!opposingPlayerSpacesReverseDiagonal) {
+                if (openSpacesReverseDiagonal.length === 1) {
+                    return [openSpacesReverseDiagonal];
+                } else {
+                    possibleWins.push(openSpacesReverseDiagonal);
+                }
+            }
+            
+            return possibleWins;
+        }
+        
+        
+        function getBestSpace(isPlayerOne) {
+            const availableSpaces = findWinningSpaces(isPlayerOne);
+            if (availableSpaces.length === 1 && availableSpaces[0].length === 1) {
+                return availableSpaces[0][0];
             } else {
-                almostWin = [];
-            }
-            
-            for (let i = 0; i < sideLength; i++) {
-                if (gameState.board[i][sideLength - 1 - i] === isPlayerOne) {
-                    almostWin.push(i);
+                const twoSpaces = [];
+                availableSpaces.forEach(function(list) {
+                    if (list.length === 2) {
+                        twoSpaces.push(list);
+                    }
+                });
+                if (twoSpaces.length) {
+                    const arrayIndex = Math.floor(Math.random() * twoSpaces.length);
+                    const listIndex = Math.floor(Math.random() * 2);
+                    return twoSpaces[arrayIndex][listIndex];
+                } else {
+                    const arrayIndex = Math.floor(Math.random() * availableSpaces.length);
+                    const listIndex = Math.floor(Math.random() * 3);
+                    return availableSpaces[arrayIndex][listIndex];
                 }
             }
-            
-            if (almostWin.length === sideLength - 1) {
-                createWinningSquare(true, null, null);
-            }
-            return winningSquare;
         }
 
         // Return those functions
@@ -406,8 +440,7 @@
                 getLastRow: getLastRow,
                 getLastColumn: getLastColumn,
                 getTallies: getTallies,
-                getAvailableSquares: getAvailableSquares,
-                findAlmostWin: findAlmostWin
+                getBestSpace: getBestSpace
               }
     }
     
@@ -430,11 +463,7 @@
             });
             
             view.onLuckyButtonClick(function() {
-                let currentSquare = model.findAlmostWin(model.getPlayer());
-                if (currentSquare.row === undefined || currentSquare.column === undefined) {
-                    const availableSquares = model.getAvailableSquares();
-                    currentSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
-                }
+                let currentSquare = model.getBestSpace(model.getPlayer());
                 takeTurn(currentSquare.row, currentSquare.column);                
             });
         }
