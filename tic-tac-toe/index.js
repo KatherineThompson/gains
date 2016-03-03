@@ -84,7 +84,6 @@
         }
         
         function addWinEffects(winningSquares) {
-            $("#board .row div").addClass("game-over");
             winningSquares.forEach(function(square) {
                 const $square = $("#board div").filter("[row=" + square.row + "]").filter("[column=" + square.column +"]");
                 $square.addClass("winning-square").animate({
@@ -98,6 +97,11 @@
                 });
             })
             
+        }
+        
+        function addEndState() {
+            $("#board .row div").addClass("game-over");
+            $("#lucky-button").attr("disbled", "true");
         }
         
         function updateTallies(currentTallies) {
@@ -116,7 +120,8 @@
                 drawBoard: drawBoard,
                 addWinEffects: addWinEffects,
                 updateTallies: updateTallies,
-                onLuckyButtonClick: onLuckyButtonClick
+                onLuckyButtonClick: onLuckyButtonClick,
+                addEndState: addEndState
         }
     }
 
@@ -404,26 +409,30 @@
             return possibleWins;
         }
         
+        function groupArrays(arrays) {
+            const sortedArrays = [];
+            arrays.forEach(function(elem) {
+                if (!sortedArrays[elem.length]) {
+                    sortedArrays[elem.length] = [];
+                }
+                sortedArrays[elem.length].push(elem);
+            });
+            return sortedArrays;
+        }
         
         function getBestSpace(isPlayerOne) {
-            const availableSpaces = findWinningSpaces(isPlayerOne);
-            if (availableSpaces.length === 1 && availableSpaces[0].length === 1) {
-                return availableSpaces[0][0];
-            } else {
-                const twoSpaces = [];
-                availableSpaces.forEach(function(list) {
-                    if (list.length === 2) {
-                        twoSpaces.push(list);
+            const sortedArrays = groupArrays(findWinningSpaces(isPlayerOne));
+            
+            for (let i = 0; i < sortedArrays.length; i++) {
+                if (sortedArrays[i]) {
+                    const sameLengthArrays = sortedArrays[i];
+                    if (sameLengthArrays.length === 1 && sameLengthArrays[0].length === 1) {
+                        return sameLengthArrays[0][0];
+                    } else {
+                        const indexOfList = Math.floor(Math.random() * sameLengthArrays.length);
+                        const indexOfElem = Math.floor(Math.random() * sameLengthArrays[indexOfList].length);
+                        return sameLengthArrays[indexOfList][indexOfElem];
                     }
-                });
-                if (twoSpaces.length) {
-                    const arrayIndex = Math.floor(Math.random() * twoSpaces.length);
-                    const listIndex = Math.floor(Math.random() * 2);
-                    return twoSpaces[arrayIndex][listIndex];
-                } else {
-                    const arrayIndex = Math.floor(Math.random() * availableSpaces.length);
-                    const listIndex = Math.floor(Math.random() * 3);
-                    return availableSpaces[arrayIndex][listIndex];
                 }
             }
         }
@@ -496,12 +505,14 @@
             
             if (winningSquares) {
                 view.changePlayerMessage(player, "You've won!");
+                view.addEndState();
                 view.addWinEffects(winningSquares);
                 view.updateTallies(model.getTallies());
                 view.freezeBoard();
                 return true;
             } else if (model.checkTie(shouldUpdateTallies)){
                 view.setTieMessage();
+                view.addEndState();
                 view.updateTallies(model.getTallies());
                 return true;
             }
