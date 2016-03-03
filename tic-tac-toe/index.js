@@ -448,7 +448,7 @@
         
         function getBestSpace(isPlayerOne) {
             const sortedArrays = groupArrays(findWinningSpaces(isPlayerOne));
-            if (sortedArrays.length < 1) {
+            if (!sortedArrays.length) {
                 const available = getAvailableSquares();
                 return available[Math.floor(Math.random() * available.length)];
             }
