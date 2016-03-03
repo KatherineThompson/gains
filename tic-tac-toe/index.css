@@ -66,3 +66,24 @@ p{
     color: slategray;
     font-size: .95em;
 }
+
+.x-hover {
+    opacity: 0.5;
+    color: #8545D5;
+    cursor: pointer;
+}
+
+.x-hover::after {
+    content: "✖";
+}
+
+.o-hover {
+    opacity: 0.5;
+    color: #ffae00;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.o-hover::after {
+    content: "🌕";
+}

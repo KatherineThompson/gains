@@ -26,6 +26,7 @@
                 if (isFrozen || $clickedSquare.hasClass("x") || $clickedSquare.hasClass("o")) {
                     return;
                 }
+                $clickedSquare.removeClass("x-hover").removeClass("o-hover");
                 const row = parseInt($clickedSquare.attr("row"));
                 const column = parseInt($clickedSquare.attr("column"));
                 callback(row, column);
@@ -109,6 +110,24 @@
             $("#player-two-wins").text(currentTallies.playerTwo);
             $("#tied-games").text(currentTallies.ties);
         }
+        
+        function onSquareHover(callback) {  
+            $("#board .row div").hover(function() {
+                const isPlayerOne = callback();
+                const $hoveredSquare = $(event.target);
+                if ($hoveredSquare.hasClass("x") || $hoveredSquare.hasClass("o")){
+                    return;
+                }
+                if (isPlayerOne) {
+                    $hoveredSquare.addClass("x-hover");
+                } else {
+                    $hoveredSquare.addClass("o-hover");
+                }
+            }, function() {
+                const $hoveredSquare = $(event.target);
+                $hoveredSquare.removeClass("x-hover").removeClass("o-hover");
+            })
+        }
         // Return those functions
         return {onSquareClick: onSquareClick,
                 changePlayerMessage: changePlayerMessage,
@@ -121,7 +140,8 @@
                 addWinEffects: addWinEffects,
                 updateTallies: updateTallies,
                 onLuckyButtonClick: onLuckyButtonClick,
-                addEndState: addEndState
+                addEndState: addEndState,
+                onSquareHover: onSquareHover
         }
     }
 
@@ -146,6 +166,7 @@
         } 
         
         function initBoard() {
+            flipCoin();
             gameState.board = [];
             for (let i = 0; i < sideLength; i++) {
                 const row = [];
@@ -154,6 +175,12 @@
                 }
                 gameState.board.push(row);
             }
+        }
+        
+       function flipCoin() {
+            const player = [true, false];
+            const index = Math.floor(Math.random() * 2);
+            gameState.isPlayerOne = player[index];
         }
         
         function getBoard() {
@@ -177,7 +204,6 @@
         
         function resetGame() {
             initBoard();
-            gameState.isPlayerOne = true;
             saveGame();
         }
         
@@ -465,6 +491,8 @@
             if (isInProgess) {
                 restoreBoard();
             }
+            
+            view.onSquareHover(model.getPlayer);
 
             view.onSquareClick(takeTurn);
                
