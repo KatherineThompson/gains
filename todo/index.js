@@ -4,12 +4,15 @@
     const view = getView(),
         controller = getController(),
         model = getModel();
-        
-    controller.init(view, model);
+    
+    $(function() {
+        controller.init(view, model);
+    })    
+    
     
     /**
      * The model contains functions related to the backing
-     * data of our app. A task is represetnted as an object:
+     * data of our app. A task is represented as an object:
      * 
      *      {name: string, isComplete: boolean}
      * 
@@ -35,7 +38,7 @@
             // Define some list of initial tasks
             // and return that list, instead of 
             // just returning an empty list.
-            return [];
+                return [{name: "Buy tuna", isComplete: false}, {name: "Open tuna", isComplete: false}, {name: "Present tuna to cat", isComplete: false}];
         }
         
         /**
@@ -48,9 +51,8 @@
             // Just like getDefaultTasks, except
             // these are the tasks that the user 
             // has already completed.
-            return [];
-        }
-        
+            return [{name: "Buy cat toys", isComplete: true}, {name: "Buy catnip", isComplete: true}, {name: "Pet cat", isComplete: true}];
+        }        
         /**
          * Load tasks from persistent storage. Called by the controller 
          * when the app is initializing, and we want to fetch the 
@@ -59,12 +61,17 @@
          * @return a list of tasks if there are tasks in storage. null if there is nothing in storage.
          */
         function loadTasks() {
+            if (localStorage.uncompletedTasks) {
+                return JSON.parse(localStorage.uncompletedTasks);
+            } else{
+                return null;
+            }
             // Access local storage, and check to see if there is anything saved
             // under the key that this app uses for incomplete tasks. You may wish to store this key 
             // as a const that can be shared between both this function and 
             // saveTasks(). If there is nothing saved under the key, then return null.
             // Otherwise, return the saved value.
-            return null;
+            
         }
         
         /**
@@ -75,12 +82,16 @@
          * @return a list of completed tasks if there are tasks in storage. null if there is nothing in storage.
          */
         function loadCompletedTasks() {
+            if (localStorage.completedTasks) {
+                return JSON.parse(localStorage.completedTasks);
+            } else{
+                return null;
+            }
             // Access local storage, and check to see if there is anything saved
             // under the key that this app uses for complete tasks. You may wish to store this key 
             // as a const that can be shared between both this function and 
             // saveTasks(). If there is nothing saved under the key, then return null.
             // Otherwise, return the saved value.
-            return null;
         }
         
         /**
@@ -93,11 +104,16 @@
          * @return nothing
          */
         function saveTasks(tasks) {
+                localStorage.uncompletedTasks = JSON.stringify(tasks);     
             // Write `tasks` to local storage. To figure out which
             // key to use, see if the tasks are marked as complete or not.     
         }
         
-        return {getDefaultTasks, loadTasks, saveTasks};
+        function saveCompletedTasks(tasks) {
+            localStorage.completedTasks = JSON.stringify(tasks);
+        }
+        
+        return {getDefaultTasks: getDefaultTasks, getDefaultCompletedTasks: getDefaultCompletedTasks, loadTasks: loadTasks, loadCompletedTasks: loadCompletedTasks, saveTasks: saveTasks, saveCompletedTasks: saveCompletedTasks};
     }
     
     /**
@@ -107,6 +123,8 @@
      * class names exist on which elements) lives here.
      */
     function getView() {
+        let onTaskCompleteCallback = null;
+        let onTaskPriorityChangeCallback = null;
         /**
          * Add a task to the end of the list. Called by the controller when
          * a new task has been created, and it needs to be added to the view.
@@ -115,6 +133,38 @@
          * @return nothing
          */
         function addTask(task) {
+            const $newTask = $("<li></li>");
+            const $checkmarkSpan = $("<span>✓</span>").addClass("checkmark").appendTo($newTask);
+            $("<span></span>").text(task.name).appendTo($newTask);
+            
+            if (!task.isComplete) {
+                $("<span>▲</span>").addClass("up-arrow").appendTo($newTask).click(function() {
+                    if (onTaskPriorityChangeCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskPriorityChangeCallback(index, true);
+                    }
+                });
+                
+                $("<span>▼</span>").addClass("down-arrow").appendTo($newTask).click(function() {
+                    if (onTaskPriorityChangeCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskPriorityChangeCallback(index, false);
+                    }
+                });
+                
+                $checkmarkSpan.click(function() {
+                    if (onTaskCompleteCallback) {
+                        const index = $(event.target).parent().prevAll().length;
+                        onTaskCompleteCallback(index);
+                    }
+                });
+                
+                $("#uncompleted-tasks").append($newTask);
+                
+            } else {
+                $("#completed-tasks").append($newTask);
+            }
+            
             // Construct a DOM element for the new task. If task.isComplete === true,
             // the task will look different. (See index.html for a spec of how it should look.)
             
@@ -136,6 +186,11 @@
          * @return nothing
          */
         function onTaskCreated(callback) {
+            $("#add-button").click(function() {
+                const newTask = $("#add-input input").val();
+                $("#add-input input").val("");
+                callback(newTask);
+            })
             // Find the DOM element that lets us know when a new task was created.
             // (This is probably a button that gets clicked, or a form that gets 
             // submitted, or a text field that has the "enter" key pressed, etc.)
@@ -159,7 +214,11 @@
         function onTaskCompleted(callback) {
             // Find DOM elements that the user will interact with to indicate
             // that a task has been completed.
-            
+            // $("#uncompleted-tasks .checkmark").click(function() {
+            //     const index = $(event.target).parent().prevAll().length;
+            //     callback(index);
+            // })
+            onTaskCompleteCallback = callback;
             // Add an event listener to those DOM elements so we know when a task
             // has been completed.
             
@@ -178,6 +237,7 @@
          * @return nothing
          */
         function removeTaskFromUncompletedList(taskIndex) {
+            $("#uncompleted-tasks li").eq(taskIndex).remove();
             // Find the DOM element containing a list of incomplete tasks.
             // Find the child at index taskIndex.
             // Remove that child.
@@ -196,7 +256,7 @@
          */
         function onTaskPriorityChange(callback) {
             // Find DOM elements that the user will click to change a task's priority.
-            
+            onTaskPriorityChangeCallback = callback;
             // Add an event listener to those DOM elements.
             
                 // Within that event listener, figure out what the index of the task
@@ -217,6 +277,7 @@
          * @return nothing
          */
         function increaseTaskPriority(taskIndex) {
+            $("#uncompleted-tasks li").eq(taskIndex).insertBefore($("#uncompleted-tasks li").eq(taskIndex - 1));
             // Find the DOM element that contains incomplete tasks
             // Find the task with index taskIndex
             // Modify the DOM to move that element before its sibling. 
@@ -232,10 +293,21 @@
          * @return nothing
          */
         function decreaseTaskPriority(taskIndex) {
+            $("#uncompleted-tasks li").eq(taskIndex).insertAfter($("#uncompleted-tasks li").eq(taskIndex + 1));
             // Find the DOM element that contains incomplete tasks
             // Find the task with index taskIndex
             // Modify the DOM to move that element after its sibling. 
         }
+        
+        return {
+            onTaskCreated: onTaskCreated, 
+            addTask: addTask,
+            removeTaskFromUncompletedList: removeTaskFromUncompletedList,
+            onTaskCompleted: onTaskCompleted,
+            onTaskPriorityChange: onTaskPriorityChange,
+            increaseTaskPriority: increaseTaskPriority, 
+            decreaseTaskPriority: decreaseTaskPriority
+        };
     }
     
     /**
@@ -255,9 +327,17 @@
          * @return nothing
          */
         function init(view, model) {
+            
             // Using the model, load the tasks from storage.
-            // const tasks = ???
-            // const completedTasks = ???
+            let tasks = model.loadTasks();
+            if (tasks === null) {
+                tasks = model.getDefaultTasks();
+            }
+            
+            let completedTasks = model.loadCompletedTasks();
+            if (completedTasks === null) {
+                completedTasks = model.getDefaultCompletedTasks();
+            }
             // We want to define these lists here, so we can 
             // share them via closure with the rest of the controller.
             
@@ -265,7 +345,13 @@
             // storage. Use the default tasks, provided by the model, instead.
             
             // Now that we have some tasks, add them to the view.
+            tasks.forEach(function(task) {
+                view.addTask(task);
+            })
             
+            completedTasks.forEach(function(task) {
+                view.addTask(task);
+            })
             // We want to know when a new task is created, but we don't
             // want to hardcode to DOM details in the controller. We'll
             // use the view to allow us to talk to the DOM while containing
@@ -275,10 +361,12 @@
                 // that a new task has been created. Let's create a new 
                 // task object to represent that new task. New tasks start
                 // with isComplete = false.
-                
+                const newTask = {name: newTaskName, isComplete: false};
                 // Once we have a new task object, add it to the view.
                 // Next, add it to our in-memory tasks list. 
-                
+                view.addTask(newTask);
+                tasks.push(newTask);
+                model.saveTasks(tasks, "uncompletedTasks");
                 // Save the tasks list to persistent storage.  
             });
             
@@ -287,7 +375,15 @@
             // the view will notify us. Call the view function that will
             // allow us to provide a callback that give us a chance to
             // react to a task being commpleted.
-            
+            view.onTaskCompleted(function(index) {
+                view.removeTaskFromUncompletedList(index);
+                tasks[index].isComplete = true;
+                completedTasks.push(tasks[index])
+                tasks.splice(index, 1);
+                view.addTask(completedTasks[completedTasks.length - 1]);
+                model.saveTasks(tasks);
+                model.saveCompletedTasks(completedTasks);
+            });
                 // Within that callback, remove the completed task from the view's
                 // collection of incomplete tasks.
                 
@@ -304,7 +400,21 @@
             // Just like we registered a callback with the view for when a task
             // was created or completed, register a callback for when a task
             // has been re-ordered.
-            
+            view.onTaskPriorityChange(function(index, isIncreasingPriority) {
+                const task = tasks[index];
+                if (isIncreasingPriority && index !== 0) {
+                    debugger;
+                    view.increaseTaskPriority(index);
+                    tasks.splice(index, 1);
+                    tasks.splice(index - 1, 0, task);
+                } else if (!isIncreasingPriority && index < tasks.length - 1) {
+                    debugger;
+                    view.decreaseTaskPriority(index);
+                    tasks.splice(index, 1);
+                    tasks.splice(index + 1, 0, task);
+                }
+                model.saveTasks(tasks);
+            });
                 // Within that callback, use the index to find the task to update.
                 
                 // Call a view function to move the task up or down in the list.
@@ -316,7 +426,7 @@
             
         }
         
-        return {init};
+        return {init: init};
     }
     
 })(window.$);

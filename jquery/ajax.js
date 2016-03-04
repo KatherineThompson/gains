@@ -20,8 +20,15 @@
      *      /ajax-debug/go
      * and put the response in the .data-response div.
      */
+    
+    $(makeCustomRequest);
+    
     function fillResponse() {
-
+        $(".ajax-form button").click(function() {
+            $.get("/ajax-debug/go", function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
@@ -31,8 +38,13 @@
      * starting with /ajax, so you may wish to try out some of
      * those requests.
      */
-    function makeRequestToPath() {
-
+    function makeRequestToPath(path) {
+        $(".ajax-form button").click(function() {
+            const path = $(".ajax-form input").filter(":eq(0)").val();
+            $.get(path, function(response) {
+                $(".data-response p").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
@@ -41,7 +53,16 @@
      * ajax call. Display the result in the .data-response div.
      */
     function makeRequestWithData() {
-
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            $.get(path, data, function(response) {
+                const $dataResponse = $(".data-response");
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").text(JSON.stringify(response, null, "\t"));
+            });
+        });
     }
 
     /**
@@ -49,7 +70,20 @@
      * div to say "Loading..." until the response comes back.
      */
     function addLoadingIndicator() {
-
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            $.get(path, data, function(response) {
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").show().text(JSON.stringify(response, null, "\t"));
+            }).fail(function() {
+                $dataResponse.find("pre").hide();
+                $dataResponse.find("p").show().text("Request failed");
+            });
+        });
     }
 
     /**
@@ -61,7 +95,31 @@
      * some useful properties and methods on it.
      */
     function displayResponseHeaders() {
-
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            const responseObject = $.get(path, data, function(response) {
+                $dataResponse.find("p").hide();
+                $dataResponse.find("pre").show().text(JSON.stringify(response, null, "\t"));
+                const headers = responseObject.getAllResponseHeaders().split("\n").slice(0, -1);
+                const $table = $(".data-response-headers tbody");
+                $table.empty();
+                headers.forEach(function(header, index) {
+                    const splitHeader = header.split(": ");
+                    const $nameCell = $("<td></td>").text(splitHeader[0]);
+                    const $valueCell = $("<td></td>").text(splitHeader[1]);
+                    const $row = $("<tr></tr>").append($nameCell).append($valueCell);                  
+                    $table.append($row);
+                });
+            }).fail(function() {
+                $dataResponse.find("pre").hide();
+                $dataResponse.find("p").show().text("Request failed");
+                $(".data-response-headers tbody").empty();
+            });
+        });
     }
 
     /**
@@ -70,6 +128,88 @@
      * the ajax request.
      */
     function sendCustomHeaders() {
-
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const headerKey = $ajaxForm.find("input").filter(":eq(2)").val();
+            const headerValue = $ajaxForm.find("input").filter(":eq(3)").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            $.ajax({
+                url: path,
+                data: data,
+                beforeSend: function(jqxhr) {
+                    jqxhr.setRequestHeader(headerKey, headerValue);
+                },
+                success: function(data, textStatus, jqxhr) {
+                    debugger;
+                    $dataResponse.find("p").hide();
+                    $dataResponse.find("pre").show().text(JSON.stringify(data, null, "\t"));
+                    const headers = jqxhr.getAllResponseHeaders().split("\n").slice(0, -1);
+                    const $table = $(".data-response-headers tbody");
+                    $table.empty();
+                    headers.forEach(function(header, index) {
+                        const splitHeader = header.split(": ");
+                        const $nameCell = $("<td></td>").text(splitHeader[0]);
+                        const $valueCell = $("<td></td>").text(splitHeader[1]);
+                        const $row = $("<tr></tr>").append($nameCell).append($valueCell);                  
+                        $table.append($row);
+                    });                    
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    debugger;
+                    $dataResponse.find("pre").hide();
+                    $dataResponse.find("p").show().text(errorThrown);
+                    $(".data-response-headers tbody").empty();
+                }
+            });                   
+        });
+    }
+    
+    function makeCustomRequest() {
+        const $ajaxForm = $(".ajax-form");
+        $ajaxForm.find("button").click(function() {
+            const path = $ajaxForm.find("input").filter(":eq(0)").val();
+            const data = $ajaxForm.find("input").filter(":eq(1)").val();
+            const headerKey = $ajaxForm.find("input").filter(":eq(2)").val();
+            const headerValue = $ajaxForm.find("input").filter(":eq(3)").val();
+            const requestType = $ajaxForm.find("select").val();
+            const $dataResponse = $(".data-response");
+            $dataResponse.find("p").text("Loading...");
+            $.ajax({
+                url: path,
+                data: data,
+                method: requestType,
+                beforeSend: function(jqxhr) {
+                    jqxhr.setRequestHeader(headerKey, headerValue);
+                },
+                success: function(data, textStatus, jqxhr) {
+                    debugger;
+                    $dataResponse.find("p").hide();
+                    if (data === undefined) {
+                        $dataResponse.find("p").text("No response body from the server").show();
+                    } else {            
+                        $dataResponse.find("pre").show().text(JSON.stringify(data, null, "\t"));
+                    }
+                    const headers = jqxhr.getAllResponseHeaders().split("\n").slice(0, -1);
+                    const $table = $(".data-response-headers tbody");
+                    $table.empty();
+                    headers.forEach(function(header, index) {
+                        const splitHeader = header.split(": ");
+                        const $nameCell = $("<td></td>").text(splitHeader[0]);
+                        const $valueCell = $("<td></td>").text(splitHeader[1]);
+                        const $row = $("<tr></tr>").append($nameCell).append($valueCell);                  
+                        $table.append($row);
+                    });                    
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    debugger;
+                    $dataResponse.find("pre").hide();
+                    $dataResponse.find("p").show().text(errorThrown);
+                    $(".data-response-headers tbody").empty();
+                }
+            });                   
+        });
     }
 })();

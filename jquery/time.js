@@ -1,3 +1,5 @@
+"use strict";
+
 (function() {
     // Set 5: Time
     //
@@ -18,8 +20,29 @@
      *          // do something in the future
      *      }, 500);
      */
+    
+    $(getRandomImageOnClickCustomTimer);
+    $(displayManyImagesWithStop);
+    $(recordClickAndOffset);
+    
     function getRandomImageOnClick() {
-        
+        const sources = [];
+        const $delayedImageDiv = $(".delayed-image");
+        const $delayedImage = $($delayedImageDiv.find(".image-target"));
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        })
+        $delayedImageDiv.find("button").click(function() {
+            setTimeout(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                if ($delayedImage.children().length > 0) {
+                } else {
+                    $delayedImage.append("<img />")
+                }
+                $delayedImage.find("img").attr("src", newSource);
+            }, 1000);
+        })
     }
     
     /**
@@ -27,7 +50,24 @@
      * customize the wait time using the input.
      */
     function getRandomImageOnClickCustomTimer() {
-        
+        const sources = [];
+        const $delayedImageDiv = $(".delayed-image");
+        const $delayedImage = $($delayedImageDiv.find(".image-target"));
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        })
+        $delayedImageDiv.find("button").click(function() {
+            const waitTime = $delayedImageDiv.find("input").val()
+            setTimeout(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                if ($delayedImage.children().length > 0) {
+                } else {
+                    $delayedImage.append("<img />");
+                }
+                $delayedImage.find("img").attr("src", newSource);
+            }, waitTime);
+        })
     }
     
     /**
@@ -43,7 +83,20 @@
      *      }, 1000);
      */
     function displayManyImages() {
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        });
         
+        $(".many-images button").click(function() {
+            const waitTime = $(".many-images input").val();
+            setInterval(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                const $newImage = $("<img />").attr("src", newSource);
+                $(".many-images .image-target").append($newImage);
+            }, waitTime);
+        })
     }
     
     /**
@@ -62,8 +115,34 @@
      * Then you can do something with id to cancel the interval,
      * but tbh I forget what it is.
      */
+           
     function displayManyImagesWithStop() {
+        const sources = [];
+        $("img").each(function(index, image) {
+            sources.push($(image).attr("src"));
+        });
+                              
+        function startImageParade(button) {
+            $(button).text("Stop").addClass("alert");
+            const waitTime = $(".many-images input").val();
+            const intervalID = window.setInterval(function() {
+                const index = Math.floor(Math.random() * sources.length);
+                const newSource = sources[index];
+                const $newImage = $("<img />").attr("src", newSource);
+                $(".many-images .image-target").append($newImage);
+            }, waitTime);
+            
+            $(button).one("click", function() {
+                window.clearInterval(intervalID);
+                $(button).text("Get me many images").removeClass("alert").one("click", function() {
+                    startImageParade(button);
+                });
+            });
+        }
         
+        $(".many-images button").one("click", function() {
+            startImageParade($(event.target));
+        });
     }
     
     /**
@@ -87,7 +166,11 @@
      * make your own format in this way.
      */
     function recordClickTimes() {
-        
+        $(".click-times button").click(function() {
+            const date = new Date;
+            const time = date.toTimeString();
+            $(".timings").append(`<li>Time of click: ${time} </li>`);
+        });
     }
     
     /**
@@ -99,6 +182,69 @@
      * to see how much time has passed between them.
      */
     function recordClickAndOffset() {
+        let priorDate;
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
+        $(".click-times button").click(function() {
+            const date = new Date;
+            
+            if (date.getUTCFullYear() % 4 === 0) {
+                monthLength[1] = 29;
+            }
+            
+            const time = `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+            const day = `${days[date.getUTCDay()]}, ${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+            
+            let yearDiff = 0;
+            let monthDiff = 0;
+            let dayDiff = 0;
+            let hourDiff = 0;
+            let minuteDiff = 0;
+            let secondDiff = 0;
+            if (priorDate !== undefined) {
+                yearDiff = date.getUTCFullYear() - priorDate.getUTCFullYear();
+                if (yearDiff > 0) {
+                    monthDiff = date.getUTCMonth() + 12 - priorDate.getUTCMonth();
+                    yearDiff--;
+                } else {
+                    monthDiff = date.getUTCMonth() - priorDate.getUTCMonth();    
+                }
+                
+                if (monthDiff > 0) {
+                    dayDiff = date.getUTCDate() + monthLength[priorDate.getUTCMonth()] - priorDate.getUTCDate();
+                    monthDiff--;
+                } else {
+                    dayDiff = date.getUTCDate() - priorDate.getUTCDate();
+                }
+                
+                if (dayDiff > 0) {
+                    hourDiff = date.getUTCHours() + 24 - priorDate.getUTCHours();
+                    dayDiff--;
+                } else {
+                    hourDiff = date.getUTCHours() - priorDate.getUTCHours();
+                }
+                
+                if (hourDiff > 0) {
+                    minuteDiff = date.getUTCMinutes() + 60 - priorDate.getUTCMinutes();
+                    hourDiff--;
+                } else {
+                   minuteDiff = date.getUTCMinutes() - priorDate.getUTCMinutes(); 
+                }
+                
+                if (minuteDiff > 0) {
+                    secondDiff = date.getUTCSeconds() + 60 - priorDate.getUTCSeconds();
+                    minuteDiff--;
+                } else {
+                    secondDiff = date.getUTCSeconds() - priorDate.getUTCSeconds();
+                }
+            }
+            
+            $(".timings").append(`<li>Time of click: ${time} ${day}
+            <br>Time since last click: ${yearDiff} years ${monthDiff} months ${dayDiff} days 
+            ${hourDiff} hours ${minuteDiff} minutes ${secondDiff} seconds</li>`);
+            priorDate = date;
+        });
     }
 })();

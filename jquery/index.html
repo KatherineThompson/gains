@@ -13,14 +13,18 @@
         You're looking for a link that looks something like the CDN link we're 
         using for Foundation below.
   -->
-  <script src="./jquery.js"></script>
-  
+
+  <script src="./jquery-2.2.0.js"></script>
+
   <script src="./index.js"></script>
   <script src="./manipulation.js"></script>
   <script src="./effects.js"></script>
+  <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.css" />-->
+  <link rel="stylesheet" href="./foundation-6/css/foundation.css" />
+  
   <script src="./ajax.js"></script>
   <script src="./time.js"></script>
-  <link rel="stylesheet" href="./foundation.css" />
+
   <link rel="stylesheet" href="./index.css" />
 </head>
 <body>
@@ -38,7 +42,7 @@
     
     <div class="row selection-images">
         <div class="small-4 columns">
-            <img class="selected" alt="doge" src="http://i.imgur.com/2uYn8XN.jpg" />
+            <img alt="doge" src="http://i.imgur.com/2uYn8XN.jpg" />
         </div>
         
         <div class="small-4 columns">
@@ -115,7 +119,7 @@
         <h1 class="small-12 columns">Manipulation</h1>
     </div>
     
-    <div class="row">
+    <div class="row names">
         <ul class="small-12 columns">
         </ul>
     </div>
@@ -262,6 +266,7 @@
             <h3>Response Body</h3>
             <div class="data-response">
                 <p>No response yet</p>
+                <pre></pre>
             </div>
         </div>
         <div class="small-6 columns">
@@ -272,6 +277,8 @@
                         <th>Header Name</th><th>Header Value</th>
                     </tr>
                 </thead>
+                <tbody>
+                </tbody>
             </table>
         </div>
     </div>

@@ -6,12 +6,18 @@
     // https://api.jquery.com/category/effects/
     // http://learn.jquery.com/effects/
     
+    // $(animateImageSrcChangeOnClick);
+    $(animateCircleOpacity);
+    $(animateParagraphTextChangeOnClick)
+    
     /**
      * Problem 0: Set up an event handler that will
      * hide any paragraph when it is clicked.
-     */
+     */    
     function hideParagraphsOnClick() {
-        
+        $("p").click(function() {
+            $(event.target).hide();
+        })
     }
     
     /**
@@ -19,7 +25,9 @@
      * slowly fade out any paragraph when it is clicked.
      */
     function fadeOutParagraphsOnClick() {
-        
+        $("p").click(function() {
+            $(event.target).fadeOut("slow");
+        })
     }
     
     /**
@@ -32,7 +40,12 @@
      *      3. Quickly fade the paragraph back in
      */
     function animateParagraphTextChangeOnClick() {
-        
+        $("p").click(function() {
+            const paragraph = $(event.target);
+            paragraph.fadeOut("slow", function() {
+                $(paragraph).text("jimmy whisper").fadeIn("fast");
+            });
+        })
     }
     
     /**
@@ -43,7 +56,20 @@
      * animation.
      */
     function animateImageSrcChangeOnClick() {
+        const srcs = [];
         
+        $(".nice-things img").each(function(index, image) {
+            srcs.push($(image).attr("src"));
+        })
+        
+        $(".nice-things img").click(function() {
+            const image = $(event.target);
+            const newSrc = srcs[Math.floor(Math.random()*6)];
+            $(image).slideUp("slow", function() {
+                $(image).attr("src", newSrc);
+                $(image).fadeIn();
+            });
+        })     
     }
     
     /**
@@ -52,7 +78,16 @@
      * again with another animation.
      */
     function hideAndShowImageOnClick() {
-        
+        $(".nice-things img").click(function() {
+            const img = $(event.target);
+            $(img).animate({
+                opacity: 0                
+            }, 1000)
+            .delay(1000)
+            .animate({
+                opacity: 1
+            }, 1000);
+        });
     }
     
     /**
@@ -62,6 +97,11 @@
      * opacity selected by the slider.
      */
     function animateCircleOpacity() {
-        
+        $(".color-picker button.primary").click(function() {
+            const rangeVal = $(".color-picker input").val() / 100;
+            $(".colored-shape").animate({
+                opacity: rangeVal
+            });
+        })
     }
 })();

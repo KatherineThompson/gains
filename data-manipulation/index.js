@@ -8,7 +8,7 @@ function crappierVersionOfAddOneToEachNumber(nums) {
     for (let i = 0; i < nums.length; i++) {
         numsWithOneAdded.push(nums[i] + 1);
     }
-    return nums;
+    return numsWithOneAdded;
 }
 
 // Maps make things cleaner. In the function above,
@@ -64,7 +64,7 @@ function fatArrowDemo(nums) {
  *         corresponding index in the input list.
  */
 function subtractOneFromEachNumber(nums) {
-
+    return nums.map(num => num - 1);
 }
 
 /**
@@ -78,7 +78,7 @@ function subtractOneFromEachNumber(nums) {
  *      wrapStrings(["hi", "there"], "cat") // ==> ["cathicat", "cattherecat"]
  */
 function wrapStrings(strs, wrapper) {
-
+    return strs.map(str => wrapper + str + wrapper);
 }
 
 /**
@@ -90,7 +90,8 @@ function wrapStrings(strs, wrapper) {
  *      getStringLengths(["abc", "da"]) // ==> [2, 3];
  */
 function getStringLengths(strs) {
-
+    // return strs.map(str => str.length);
+    return pick(strs, "length");
 }
 
 /**
@@ -104,7 +105,7 @@ function getStringLengths(strs) {
  *      pick([{name: "Liam", age: 4}, {name: "Potato", age: 13}], "age") // ==> [4, 13]
  */
 function pick(objs, key) {
-
+    return objs.map(obj => obj[key]);
 }
 
 // Extra credit: can you go back and rewrite getStringLengths to use pick()?
@@ -120,7 +121,43 @@ function pick(objs, key) {
  *      pluck([{name: "Liam", age: 4}, {name: "Potato", age: 13}], "age") // ==> [{age: 4}, {age: 13}]
  */
 function pluck(objs, key) {
-
+    // return objs.map(function(obj) {
+    //     return {key: obj[key]};
+        
+    //     const result = {};
+    //     result[key] = obj[key];
+        
+    //     const variable = 'foo';
+        
+    //     result.constant
+    //     result[variable]
+        
+    //     result.constant = 2
+    //     result[variable] = Math.random() * 2 * 2
+        
+    //     let obj2 = {constant: 2};
+    //     let otherObj = {[variable]: 2};
+        
+        
+    //     return result;
+    // });
+    
+    // const f = obj => ({key: obj.value});
+    
+    // const func = obj => {
+    //     console.log("Tupelo");
+    //     return obj.val;
+    // };
+    // const func2 = function(obj) {
+    //     console.log('x');
+    //     return obj.val;
+    // };
+    // function func3(obj) {
+    //     return obj.val;
+    // }
+    
+    return objs.map(obj => ({[key]: obj[key]}));
+    
 }
 
 /**
@@ -141,7 +178,26 @@ function pluck(objs, key) {
  *      lookupUsers(allUsers, ["Liam", "Paul"]) // ==> [{name: "Liam", age: 4}, {name: "Paul", age: 32}]
  */
 function lookupUsers(allUsers, userNames) {
+    const userObjects = userNames.map(name => allUsers.find(user => user.name === name)
+        // {let userObj;
+        // allUsers.forEach(function(user) {
+        //     if (user.name === name) {
+        //         userObj = user;
+        //     }
+        // });
+        // return userObj;}
+    );
+    return userObjects.filter(userObj => userObj !== undefined);
+    // userObjects.forEach(function(element, index) {
+    //     if (element === undefined) {
+    //         userObjects.splice(index, 1);
+    //     }
+    // });
+    // return userObjects;
+}
 
+function getFirstCatString(catStrings) {
+    return catStrings.find(str => str.includes("cat"))
 }
 
 /**
@@ -156,7 +212,24 @@ function lookupUsers(allUsers, userNames) {
  *      getFirstElements([[5, 4, 3], [9, 8, 7], 2]) // ==> [[5, 4], [9, 8]]
  */
 function getFirstElements(lists, elemCount) {
-
+    if (elemCount > 0) {      
+        return lists.map(list => list.filter((elem, index) => index < elemCount));
+    } else {
+        return [];
+    }
+    // if (elemCount > 0) {
+    //     return lists.map(list => {
+    //         const currentCountedList = [];
+    //         list.forEach(function(element, index) {
+    //             if (index < elemCount) {
+    //                 currentCountedList.push(element);
+    //             }
+    //         })
+    //         return currentCountedList;
+    //     });
+    // } else {
+    //     return [];
+    // }
 }
 
 // You can also filter. Filtering is when you create a new list
@@ -167,7 +240,7 @@ function removeLongStrings(strs) {
     // makes it in to the result list. If the function you pass returns
     // false, then it's omitted. You will sometimes see this function
     // referred to as a predicate.
-    return strs.filter(str => str.length > 10);
+    return strs.filter(str => str.length <= 10);
 }
 
 // When you do a filter, the order of elements is not changed. It's just
@@ -176,7 +249,7 @@ function removeLongStrings(strs) {
 // Just in case it makes you feel better: ^_^
 function crappierRemoveLongStrings(strs) {
     const shortStrings = [];
-    for (let i = 0; i > strs.length; i++) {
+    for (let i = 0; i < strs.length; i++) {
         if (strs[i].length <= 10) {
             shortStrings.push(strs[i]);
         }
@@ -211,7 +284,7 @@ function randomList(list) {
  * @return a list of numbers in nums that are odd.
  */
 function getOddNumbers(nums) {
-
+    return nums.filter(num => num % 2 !== 0);
 }
 
 /**
@@ -221,7 +294,7 @@ function getOddNumbers(nums) {
  * @return a list of strings, all of which contain the substring "cat".
  */
 function getStringsWithCat(strings) {
-
+    return strings.filter(str => str.includes("cat"));
 }
 
 /**
@@ -235,7 +308,14 @@ function getStringsWithCat(strings) {
  *
  */
 function getNumberListsSummingToZero(numLists) {
-
+    return numLists.filter(list => 
+        // let sum = 0;
+        list.reduce((sumSoFar, num) => sumSoFar + num, 0) === 0
+        // list.forEach(function(num) {
+        //     sum += num;
+        // });
+        // return sum === 0;
+    );
 }
 
 /**
@@ -248,7 +328,7 @@ function getNumberListsSummingToZero(numLists) {
  *      getObjectsWithAtLeastThreeKeys([{}, {a: 1, b: 2, c: 3}, {d: 4}]) // ==> [{a: 1, b: 2, c: 3}]
  */
 function getObjectsWithAtLeastThreeKeys(objs) {
-
+    return objs.filter(obj => Object.keys(obj).length >= 3);
 }
 
 // Now that we're feeling good about filtering and mapping, let's look at a more fundamental
@@ -307,7 +387,12 @@ function product(nums) {
  *      powerAll([2, 3, 4]) // ==> (2 ^ 3) ^ 4 ==> 4096
  */
 function powerAll(nums) {
-
+    if (nums.length < 1) {
+        return 0;
+    } else {
+        const numsMinusFirst = nums.slice(1);
+        return numsMinusFirst.reduce((exponentiationSoFar, num) => Math.pow(exponentiationSoFar, num), nums[0]);
+    }
 }
 
 /**
@@ -320,7 +405,7 @@ function powerAll(nums) {
  *      concatAll(['a', 'bbbb', 'cde']) // ==> 'abbbcde'
  */
 function concatAll(strs) {
-
+    return strs.reduce((strSoFar, char) => strSoFar + char, "");
 }
 
 /**
@@ -333,7 +418,7 @@ function concatAll(strs) {
  *      flatten([[], [1, 2], [3], [4, 5]]) // ==> [1, 2, 3, 4, 5]
  */
 function flatten(lists) {
-
+    return lists.reduce((listSoFar, list) => listSoFar.concat(list), []);
 }
 
 /**
@@ -346,7 +431,7 @@ function flatten(lists) {
  *      getTotalLength(["ab", "", "cde"]) // ==> 5
  */
 function getTotalLength(strs) {
-
+    return strs.reduce((totalSoFar, str) => totalSoFar += str.length, 0);
 }
 
 // Now we get meta! :)
@@ -364,6 +449,7 @@ function getTotalLength(strs) {
  */
 function map(list, fn) {
     // Use reduce to implement this.
+    return list.reduce((listSoFar, num) => listSoFar.concat(fn(num)), []);
 }
 
 /**
@@ -378,6 +464,13 @@ function map(list, fn) {
  */
 function filter(list, predicate) {
     // Use reduce to implement this
+    return list.reduce((listSoFar, elem) => {
+        if (predicate(elem)) {
+            return listSoFar.concat(elem);
+        } else {
+            return listSoFar;
+        }
+    }, []);
 }
 
 // It's turtles all the way down.
@@ -395,11 +488,26 @@ function filter(list, predicate) {
  */
 function reduce(list, reducerFn, initialValue) {
     // Use forEach to solve this one.
+    let reduced = initialValue;
+    list.forEach(function(elem) {
+        reduced = reducerFn(reduced, elem);
+    });
+    if (reduced === undefined) {
+        return [];
+    }
+    return reduced;
 }
 
 // Now solve it recursively!
 function reduceRecursive(list, reducerFn, initialValue) {
-
+    if (!list.length) {
+        return initialValue;
+    } else {
+        const firstElem = list[0];
+        const newInitialValue = reducerFn(initialValue, firstElem);
+        const newList = list.slice(1);
+        return reduceRecursive(newList, reducerFn, newInitialValue);
+    }
 }
 
 // We will export all these functions so the tests can access them.

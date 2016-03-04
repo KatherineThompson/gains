@@ -6,6 +6,6 @@
     "start": "static"
   },
   "devDependencies": {
-        "static": "*"
+    "node-static": "^0.7.7"
   }
 }

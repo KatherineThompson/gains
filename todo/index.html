@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>To Do</title>
-  
+ 
   <script src="./vendor/jquery.js"></script>
   <script src="./index.js"></script>
   <link rel="stylesheet" href="./vendor/foundation.css" />
@@ -13,7 +13,32 @@
     <div class="row">
         <h1 class="small-12 columns">Low Budget Wunderlist Clone</h1>
     </div>
+      
+    <div class="row">
+        
+        <div class="small-5 columns">
+            <h3>To Do</h3>
+            <ol id="uncompleted-tasks">
+            </ol>
+            <div id="add-input" class="row">
+                <div class="small-8 columns">          
+                    <input type="text" placeholder="Order cat tree"/>
+                </div>
+                <div class="small-1 columns end">
+                    <button id="add-button" class="button">Add</button>
+                </div>
+            </div>                       
+        </div>
+        
+        <div class="small-5 columns">
+            <h3>Completed</h3>
+            <ol id="completed-tasks" >
+            </ol>
+        </div>
+        
+    </div>
 
+    </div>
     <!-- Left column -->    
         <!-- Add a list to hold the tasks. -->
             <!-- Each task should have a name, a button to mark it as completed, 

@@ -42,13 +42,32 @@ describe('intro', () => {
         describe('startsWith', () => {
             it('returns true when the string starts with the search pattern', () => {
                 // TODO make an assertion
+                assert.strictEqual("plump".startsWith("p"), true);
             });
 
             it('returns false when the string does not start with the search pattern', () => {
                 // TODO make an assertion
+                assert.strictEqual("cat".startsWith("k"), false);
             });
         });
-
+        
+        describe("includes", () => {
+           it("returns false when called on the empty string", () => {
+               assert.strictEqual("".includes("cat"), false);
+           }); 
+           
+           it("returns true when the string contains the element", () => {
+              assert.strictEqual("cattery".includes("cat"), true); 
+           });
+           
+           it("returns false when the string does not contain the element", () => {
+              assert.strictEqual("plump".includes("cat"), false); 
+           });
+           
+           it("returns false when the position of the substring is greater than the position after which the search begins", () => {
+              assert.strictEqual("cattery".includes("cat", 1), false); 
+           });
+        });
         // includes()
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
 
@@ -61,15 +80,104 @@ describe('intro', () => {
             // Verify that calling includes() with a `position` as the second argument affects the
             // result of the function; if position is greater than the location of the substring that is
             // being searched for, then the function should return false.
-
+        describe("endsWith", () => {
+            it("returns false when called on the empty string", () => {
+               assert.strictEqual("".endsWith("t"), false);
+           }); 
+           
+           it("returns true when the string ends with the element", () => {
+              assert.strictEqual("cattery".endsWith("y"), true); 
+           });
+           
+           it("returns false when the string does not end with the element", () => {
+              assert.strictEqual("plump".endsWith("c"), false); 
+           });
+           
+           it("returns false when the ending position is less than the position of the search element", () => {
+              assert.strictEqual("cattery".endsWith("y", 3), false); 
+           });
+        });
         // endsWith()
-
+        describe("toUpperCase", () => {
+            it("returns the empty string when called on the empty string", () => {
+                assert.strictEqual("".toUpperCase(), "");
+            });
+            
+            it("returns a lower case string in upper case", () => {
+                assert.strictEqual("cat".toUpperCase(), "CAT");
+            });
+            
+            it("returns an upper case string in upper case", () => {
+               assert.strictEqual("CAT".toUpperCase(), "CAT"); 
+            });
+            
+            it("returns a mixed case string in upper case", () => {
+               assert.strictEqual("cAt".toUpperCase(), "CAT"); 
+            });
+        });
         // toUpperCase()
-
+        describe("toLowerCase", () => {
+            it("returns the empty string when called on the empty string", () => {
+                assert.strictEqual("".toLowerCase(), "");
+            });
+            
+            it("returns an upper case string in lower case", () => {
+                assert.strictEqual("CAT".toLowerCase(), "cat");
+            });
+            
+            it("returns a lower case string in lower case", () => {
+               assert.strictEqual("cat".toLowerCase(), "cat"); 
+            });
+            
+            it("returns a mixed case string in upper case", () => {
+               assert.strictEqual("cAt".toLowerCase(), "cat"); 
+            });
+        });        
         // toLowerCase()
-
+        describe("substring", () => {
+            it("returns the empty string when called on the empty string", () => {
+               assert.strictEqual("".substring(0, 3), ""); 
+            });
+            
+            it("returns a substring when called with both a start and end position", () => {
+               assert.strictEqual("plumperdeedoodle".substring(0, 5), "plump");
+            });
+            
+            it("returns a substring when called with only a start position", () => {
+                assert.strictEqual("plumperdeedoodle".substring(7), "deedoodle");
+            });
+            
+            it("returns a substring when the start position is higher than the end position", () => {
+               assert.strictEqual("plumperdeedoodle".substring(5, 0), "plump"); 
+            });
+            
+            it("returns the empty string when the start and end position are the same", () => {
+                assert.strictEqual("plump".substring(2, 2), "");
+            });
+            
+            it("returns a substring when either position is greater than the string's length and is set to string length", () => {
+                assert.strictEqual("plump".substring(10, 2), "ump");
+            });
+            
+            it("returns a substring when either position is less than 0 or NaN and is set to 0", () => {
+                assert.strictEqual("plump".substring("cat"), "plump");
+                assert.strictEqual("plump".substring(-4), "plump");
+            });
+        });
         // substring()
-
+        describe("concat", () => {
+           it("returns the empty string when called with two empty strings", () => {
+               assert.strictEqual("".concat(""), "");
+           });
+           
+           it("returns a new concatenated string when called with the empty string and another string", () => {
+               assert.strictEqual("".concat("cat"), "cat");
+           });
+           it("returns a new concatenated string when called with two or more strings", () => {
+               assert.strictEqual("cat".concat(" is plump!"), "cat is plump!");
+               assert.strictEqual("cat".concat(" is ", "plump!"), "cat is plump!");
+           });              
+        });
         // concat()
     });
 })
