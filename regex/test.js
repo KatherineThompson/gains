@@ -36,6 +36,15 @@ test('regex', t => {
         t.equal(regex.stringIsFerretFerryOrFerrari("transfer A"), false, "ferret, ferry, and ferrari are not present in a string not containing them");
     });
     
+    t.test("wordEndsInIous", t => {
+       t.plan(5);
+       t.equal(regex.wordEndsInIous(""), false, "the empty string does not end in -ious");
+       t.equal(regex.wordEndsInIous("how delicious"), true, "the word ends in -ious at the end of the string");
+       t.equal(regex.wordEndsInIous("spacious room"), true, "the word ends in -ious in the middle of the string");
+       t.equal(regex.wordEndsInIous("ruinous"), false, "the word does not end in -ious but has all the letters");
+       t.equal(regex.wordEndsInIous("consciousness"), false, "a word with -ious- in the middle does not end in -ious"); 
+    });
+    
     t.test("examples", t => {
         t.plan(7);
         t.equal(regex.hasAChars('bbb'), false, 'there are no a chars in a string full of bs');

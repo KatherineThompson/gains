@@ -23,7 +23,7 @@ function stringIsFerretFerryOrFerrari(str) {
 }
 
 function wordEndsInIous(str) {
-    console.log(str);
+    return /ious\b/.test(str);
 }
 
 function stringIsWhitespaceFollowedByPunctuation(str) {
