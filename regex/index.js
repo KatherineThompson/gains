@@ -27,7 +27,7 @@ function wordEndsInIous(str) {
 }
 
 function stringIsWhitespaceFollowedByPunctuation(str) {
-    console.log(str);
+    return /\s[.,;:]/.test(str);
 }
 
 function wordIsLongerThanSixLetters(str) {

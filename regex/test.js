@@ -45,6 +45,15 @@ test('regex', t => {
        t.equal(regex.wordEndsInIous("consciousness"), false, "a word with -ious- in the middle does not end in -ious"); 
     });
     
+    t.test("stringIsWhitespaceFollowedByPunctuation", t => {
+       t.plan(5);
+       t.equal(regex.stringIsWhitespaceFollowedByPunctuation(""), false, "the empty string is not whitespace followed by punctuation");
+       t.equal(regex.stringIsWhitespaceFollowedByPunctuation("bad punctuation ."), true, "the string contains whitespace followed by punctuation at the end");
+       t.equal(regex.stringIsWhitespaceFollowedByPunctuation("escape the dot"), false, "the string does not contain whitespace followed by punctuation, only whitespace");
+       t.equal(regex.stringIsWhitespaceFollowedByPunctuation("cat : plump"), true, "the string contains whitespace followed by punctuation in the middle");
+       t.equal(regex.stringIsWhitespaceFollowedByPunctuation("punctuation."), false, "the string does not contain whitespace followed byt punctuation, only punctuation"); 
+    });
+    
     t.test("examples", t => {
         t.plan(7);
         t.equal(regex.hasAChars('bbb'), false, 'there are no a chars in a string full of bs');
