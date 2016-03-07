@@ -11,7 +11,7 @@ function hasAChars(str) {
 function stringIsCarOrCat(str) {
     // These console.log()s are here so jshint passes.
     // Remove them when you start to work.
-    console.log(str);
+    return /ca[rt]/.test(str);    
 }
 
 function stringIsPopOrProp(str) {
