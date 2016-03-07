@@ -15,11 +15,11 @@ function stringIsCarOrCat(str) {
 }
 
 function stringIsPopOrProp(str) {
-    console.log(str);
+    return /pr?op/.test(str);
 }
 
 function stringIsFerretFerryOrFerrari(str) {
-    console.log(str);
+    return /ferr(y|et|ari)/.test(str);
 }
 
 function wordEndsInIous(str) {

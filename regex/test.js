@@ -17,6 +17,25 @@ test('regex', t => {
         t.equal(regex.stringIsCarOrCat("car"), true, "car is present when it's the whole string");
     });
     
+    t.test("stringIsPopOrProp", t => {
+        t.plan(5);
+        t.equal(regex.stringIsPopOrProp(""), false, "the empty string is not pop or prop");
+        t.equal(regex.stringIsPopOrProp("pop culture"), true, "pop is present as part of a longer string");
+        t.equal(regex.stringIsPopOrProp("mad props"), true, "prop is present as part of a longer string");
+        t.equal(regex.stringIsPopOrProp("plop"), false, "pop and prop are not present though the letters are");
+        t.equal(regex.stringIsPopOrProp("pop"), true, "pop is present when it's the entire string");
+    });
+    
+    t.test("stringIsFerretFerryorFerrari", t => {
+        t.plan(6);
+        t.equal(regex.stringIsFerretFerryOrFerrari(""), false, "the empty string is not ferret, ferry, or ferrari");
+        t.equal(regex.stringIsFerretFerryOrFerrari("ferret"), true, "ferret is present as the whole string");
+        t.equal(regex.stringIsFerretFerryOrFerrari("ferry"), true, "ferry is present as the whole string");
+        t.equal(regex.stringIsFerretFerryOrFerrari("ferrari"), true, "ferrari is present as the whole string");
+        t.equal(regex.stringIsFerretFerryOrFerrari("ferrum"), false, "ferret, ferry, and ferrari are not present though 'ferr' is");
+        t.equal(regex.stringIsFerretFerryOrFerrari("transfer A"), false, "ferret, ferry, and ferrari are not present in a string not containing them");
+    });
+    
     t.test("examples", t => {
         t.plan(7);
         t.equal(regex.hasAChars('bbb'), false, 'there are no a chars in a string full of bs');
@@ -27,6 +46,6 @@ test('regex', t => {
 
         t.equal(regex.getLastFourDigits('123-45-6789'), '6789', 'extracts the last four digits of a SS number');
         t.equal(regex.getLastFourDigits('not an ss number'), null, 'determines when the input is not an SS number');
-    })
+    });
 
 });
