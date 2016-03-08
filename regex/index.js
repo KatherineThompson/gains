@@ -35,7 +35,7 @@ function wordIsLongerThanSixLetters(str) {
 }
 
 function wordLacksLetterE(str) {
-    console.log(str);
+    return /\b([a-d]|[f-z])+\b/.test(str);
 }
 
 // Now let's do a few more
@@ -51,7 +51,7 @@ function wordLacksLetterE(str) {
  * @return true if the string is a phone number, and false otherwise
  */
 function isPhoneNumber(ostensiblePhoneNumber) {
-    console.log(ostensiblePhoneNumber);
+    return /^\d{3}-\d{3}-\d{4}$/.test(ostensiblePhoneNumber);
 }
 
 /**

@@ -62,6 +62,16 @@ test('regex', t => {
        t.equal(regex.stringIsWhitespaceFollowedByPunctuation("punctuation."), false, "the string does not contain whitespace followed byt punctuation, only punctuation"); 
     });
     
+    t.test("wordLacksLetterE", t => {
+        t.plan(6);
+        t.equal(regex.wordLacksLetterE(""), false, "the empty string is not a word");
+        t.equal(regex.wordLacksLetterE("red platypus"), true, "out of two, at least one word does not have the letter e");
+        t.equal(regex.wordLacksLetterE("wobbling nest"), true, "out of two, at least one word does not have the letter e");
+        t.equal(regex.wordLacksLetterE("earth bed"), false, "two words do contain the letter e (one begins with e)");
+        t.equal(regex.wordLacksLetterE("learning ape"), false, "two words do not contain the letter e (one ends with e)");
+        t.equal(regex.wordLacksLetterE("2384729387"), false, "digits are not a word");
+    });
+    
     t.test("examples", t => {
         t.plan(7);
         t.equal(regex.hasAChars('bbb'), false, 'there are no a chars in a string full of bs');
@@ -72,6 +82,15 @@ test('regex', t => {
 
         t.equal(regex.getLastFourDigits('123-45-6789'), '6789', 'extracts the last four digits of a SS number');
         t.equal(regex.getLastFourDigits('not an ss number'), null, 'determines when the input is not an SS number');
+    });
+    
+    t.test("isPhoneNumber", t => {
+       t.plan(5);
+       t.equal(regex.isPhoneNumber(""), false, "the empty string is not a phone number");
+       t.equal(regex.isPhoneNumber("405-234-5893"), true, "10 digits separated by dashes is a phone number");
+       t.equal(regex.isPhoneNumber("4052345893"), false, "10 digits are not a phone number");
+       t.equal(regex.isPhoneNumber("cat is plump"), false, "words are not a phone number");
+       t.equal(regex.isPhoneNumber("cat 405-234-5893 is plump"), false, "the string contains a phone number but is not one as a whole"); 
     });
 
 });
