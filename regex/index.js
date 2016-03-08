@@ -97,7 +97,7 @@ function isNetid(ostensibleNetid) {
  * @return {string} the message with all urls replaced with URL_REMOVED
  */
 function replaceAllUrls(message) {
-    console.log(message);
+    return message.replace(/\bw{3}\.\w+\.(com|biz|info|guru|pizza)\b/g, "URL_REMOVED");
 }
 
 /**
@@ -118,7 +118,12 @@ function replaceAllUrls(message) {
  * @return {number} the count of words that have both British and American spellings
  */
 function getBritishAmericanPairCount(sentence) {
-    console.log(sentence);
+    let count = 0;
+    function isPair(params) {
+        count++;
+    }
+    sentence.replace(/\b(labou?r|neighbou?r|(theater|theatre)|(center|centre))\b/g, isPair);
+    return count;
 }
 
 /**
@@ -130,15 +135,18 @@ function getBritishAmericanPairCount(sentence) {
  *
  *      getWithSpacesAfterPeriodCount('I like dogs. I like cats.', 2)
  *      // ==> 'I like dogs.  I like cats.'
- *      // Note: never actually do this, because putting 2 spaces after a sentence is bad. ^_^
+ *      // Note: always actually do this, because putting 2 spaces after a sentence is good. ^_^
  *
  * @param {string} paragraph – a collection of sentences
  * @param {number} count – the number of spaces to put after each sentence.
  * @return {string} a collection of sentences separated by `count` spaces
  */
 function getWithSpacesAfterPeriodCount(paragraph, count) {
-    // Hint: replace() could be useful here as well
-    console.log(paragraph, count);
+    let newSpaces = ".";
+    for (let i = 0; i < count; i++) {
+        newSpaces += " ";
+    }
+    return paragraph.replace(/\. /, newSpaces);
 }
 
 // Regular Expressions can also be used to parse out certain parts of a string.

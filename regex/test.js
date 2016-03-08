@@ -114,5 +114,29 @@ test('regex', t => {
        t.equal(regex.isNetid("9000"), false, "a number is not a netid");
        t.equal(regex.isNetid("o99999"), false, "one letter and five numbers is not a netid"); 
     });
+    
+    t.test("replaceAllUrls", t => {
+       t.plan(4);
+       t.equal(regex.replaceAllUrls(""), "", "empty string is not replaced");
+       t.equal(regex.replaceAllUrls("I love www.cats123.guru"), "I love URL_REMOVED", "a valid url with letters and numbers is replaced by URL_REMOVED");
+       t.equal(regex.replaceAllUrls("The best airbnb is ww.cat-housebiz"), "The best airbnb is ww.cat-housebiz", "an invalid url is not replaced");
+       t.equal(regex.replaceAllUrls("The best airbnb is www.cathouse.info but I also love www.imsorandom.pizza"), "The best airbnb is URL_REMOVED but I also love URL_REMOVED", "multiple urls are replaced");
+    });
+    
+    t.test("getBritishAmericanPairCount", t => {
+        t.plan(4);
+        t.equal(regex.getBritishAmericanPairCount(""), 0, "the empty string has no pairs");
+        t.equal(regex.getBritishAmericanPairCount("I love plump cats!"), 0, "there are no pairs");
+        t.equal(regex.getBritishAmericanPairCount("I saw a ditty about the labour party at the theatre last night."), 2, "there are two pairs");
+        t.equal(regex.getBritishAmericanPairCount("138497324918734"), 0, "a number has no pairs");
+    });
+    
+    t.test("getWithSpacesAfterPeriodCount", t => {
+       t.plan(4);
+       t.equal(regex.getWithSpacesAfterPeriodCount("", 3), "", "the empty string is not changed");
+       t.equal(regex.getWithSpacesAfterPeriodCount("Cat is plump. Oh so plump!", 3), "Cat is plump.   Oh so plump!", "three spaces are added between sentences");
+       t.equal(regex.getWithSpacesAfterPeriodCount("I'm hungry and want icecream", 2), "I'm hungry and want icecream", "a sentence with no punctuation is not changed"); 
+       t.equal(regex.getWithSpacesAfterPeriodCount("5478769.798789", 6), "5478769.798789", "nothing happens to a decimal number");   
+    });
 
 });
