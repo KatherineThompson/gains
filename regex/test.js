@@ -45,6 +45,14 @@ test('regex', t => {
        t.equal(regex.wordEndsInIous("consciousness"), false, "a word with -ious- in the middle does not end in -ious"); 
     });
     
+    t.test("wordIsLongerThanSixLetters", t => {
+        t.plan(4);
+        t.equal(regex.wordIsLongerThanSixLetters(""), false, "the empty string is not longer than six characters");
+        t.equal(regex.wordIsLongerThanSixLetters("hottentottententen"), true, "the word is longer than six characters");
+        t.equal(regex.wordIsLongerThanSixLetters("no"), false, "the word is shorter than six characters");
+        t.equal(regex.wordIsLongerThanSixLetters("hotten totten tenten"), false, "words that are six characters long do not have more than six charcters");
+    })
+    
     t.test("stringIsWhitespaceFollowedByPunctuation", t => {
        t.plan(5);
        t.equal(regex.stringIsWhitespaceFollowedByPunctuation(""), false, "the empty string is not whitespace followed by punctuation");

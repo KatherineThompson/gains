@@ -31,7 +31,7 @@ function stringIsWhitespaceFollowedByPunctuation(str) {
 }
 
 function wordIsLongerThanSixLetters(str) {
-    console.log(str);
+    return /\w{7,}/.test(str);
 }
 
 function wordLacksLetterE(str) {
