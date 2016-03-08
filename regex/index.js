@@ -179,9 +179,10 @@ function getAreaCodes(phoneNumbers) {
     const areaCodes = [];
     const areaCodeData = phoneNumbers.map(number => number.match(/\b(\d{3})-/));
     areaCodeData.forEach(function(areaCode) {
-        areaCodes.push(areaCode[1]);
-    })
-    console.log(areaCodes);
+        if (areaCode) {
+            areaCodes.push(areaCode[1]);
+        }
+    });
     return areaCodes;
 }
 /**
@@ -197,7 +198,10 @@ function getAreaCodes(phoneNumbers) {
  * @return an object representing the address
  */
 function parseAddress(address) {
-    console.log(address);
+    const addressPieces = address.match(/(\d+) ([\w ]+), ([a-z]+), ([a-z]{2}) (\d{5})/i);
+    if (addressPieces) {
+        return {houseNumber: addressPieces[1], street: addressPieces[2], city: addressPieces[3], state: addressPieces[4], zipCode: addressPieces[5]};
+    }
 }
 
 module.exports = {

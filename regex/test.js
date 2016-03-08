@@ -140,10 +140,18 @@ test('regex', t => {
     });
     
     t.test("getAreaCodes", t => {
-       t.plan(3);
+       t.plan(4);
        t.equal(regex.getAreaCodes([]), [], "the empty array returns an empty array");
        t.equal(regex.getAreaCodes(["123-456-7890"]), ["123"], "a one element array returns the correct area code");
        t.equal(regex.getAreaCodes(["123-456-7890", "098-765-4321", "102-938-4756"]), ["123", "098", "102"], "an array with multiple elements returns the area codes");
+       t.equal(regex.getAreaCodes(["123-456-7890", "0987654321", "102-938-4756"]), ["123", "102"], "returns only the area codes with the correct form");
+    });
+    
+    t.test("parseAddress", t => {
+       t.plan(3);
+       t.equal(regex.parseAddress(""), undefined, "the empty string returns undefined");
+       t.equal(regex.parseAddress("300 S Lamar Blvd, Austin, TX 78704"), {city: 'Austin', houseNumber: '300', state: 'TX', street: 'S Lamar Blvd', zipCode: '78704'}", "return an object with the address compenents");
+       t.equal(regex.parseAddress("221b Baker St, London, UK 12345"), undefined, "an address in the wrong form returns undefined");
     });
 
 });
