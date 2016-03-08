@@ -176,7 +176,13 @@ function getLastFourDigits(socialSecurityNumber) {
  */
 function getAreaCodes(phoneNumbers) {
     // Use map!
-    console.log(phoneNumbers);
+    const areaCodes = [];
+    const areaCodeData = phoneNumbers.map(number => number.match(/\b(\d{3})-/));
+    areaCodeData.forEach(function(areaCode) {
+        areaCodes.push(areaCode[1]);
+    })
+    console.log(areaCodes);
+    return areaCodes;
 }
 /**
  * Parse an address. Assume a simplified definition of what an address is, as seen

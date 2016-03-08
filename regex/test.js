@@ -138,5 +138,12 @@ test('regex', t => {
        t.equal(regex.getWithSpacesAfterPeriodCount("I'm hungry and want icecream", 2), "I'm hungry and want icecream", "a sentence with no punctuation is not changed"); 
        t.equal(regex.getWithSpacesAfterPeriodCount("5478769.798789", 6), "5478769.798789", "nothing happens to a decimal number");   
     });
+    
+    t.test("getAreaCodes", t => {
+       t.plan(3);
+       t.equal(regex.getAreaCodes([]), [], "the empty array returns an empty array");
+       t.equal(regex.getAreaCodes(["123-456-7890"]), ["123"], "a one element array returns the correct area code");
+       t.equal(regex.getAreaCodes(["123-456-7890", "098-765-4321", "102-938-4756"]), ["123", "098", "102"], "an array with multiple elements returns the area codes");
+    });
 
 });
