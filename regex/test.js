@@ -103,5 +103,16 @@ test('regex', t => {
        t.equal(regex.isPhoneNumberLoose("1-2-3-456-7890"), false, "10 digits with dashes in the wrong place is not a phone number");
        t.equal(regex.isPhoneNumberLoose("cat is plump"), false, "words are not a phone number"); 
     });
+    
+    t.test("isNetid", t => {
+       t.plan(7);
+       t.equal(regex.isNetid(""), false, "the empty string is not a netid");
+       t.equal(regex.isNetid("cat is plump"), false, "words are not a netid");
+       t.equal(regex.isNetid("ket29"), true, "three letters and two number are a netid");
+       t.equal(regex.isNetid("og9"), true, "two letters and one number is a netid");
+       t.equal(regex.isNetid("cats1111"), true, "four letters and four number is a netid");
+       t.equal(regex.isNetid("9000"), false, "a number is not a netid");
+       t.equal(regex.isNetid("o99999"), false, "one letter and five numbers is not a netid"); 
+    });
 
 });

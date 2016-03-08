@@ -80,7 +80,7 @@ function isPhoneNumberLoose(ostensiblePhoneNumber) {
  * @param {string} ostensibleNetid
  */
 function isNetid(ostensibleNetid) {
-    console.log(ostensibleNetid);
+    return /\b[a-z]{2,4}\d{1,4}\b/.test(ostensibleNetid);
 }
 
 /**
