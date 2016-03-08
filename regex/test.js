@@ -92,5 +92,16 @@ test('regex', t => {
        t.equal(regex.isPhoneNumber("cat is plump"), false, "words are not a phone number");
        t.equal(regex.isPhoneNumber("cat 405-234-5893 is plump"), false, "the string contains a phone number but is not one as a whole"); 
     });
+    
+    t.test("isPhoneNumberLoose", t => {
+       t.plan(7);
+       t.equal(regex.isPhoneNumberLoose(""), false, "the empty string is not a phone number");
+       t.equal(regex.isPhoneNumberLoose("123-456-7890"), true, "10 digits with dashes is a phone number");
+       t.equal(regex.isPhoneNumberLoose("123.456.7890"), true, "10 digits with dots is a phone number");
+       t.equal(regex.isPhoneNumberLoose("(123) 456-7890"), true, "10 digits with parentheses and a dash is a phone number");
+       t.equal(regex.isPhoneNumberLoose("1234567890"), false, "10 digits alone are not a phone number");
+       t.equal(regex.isPhoneNumberLoose("1-2-3-456-7890"), false, "10 digits with dashes in the wrong place is not a phone number");
+       t.equal(regex.isPhoneNumberLoose("cat is plump"), false, "words are not a phone number"); 
+    });
 
 });

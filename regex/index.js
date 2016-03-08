@@ -67,7 +67,7 @@ function isPhoneNumber(ostensiblePhoneNumber) {
  * @return true if the string is a phone number, and false otherwise
  */
 function isPhoneNumberLoose(ostensiblePhoneNumber) {
-    console.log(ostensiblePhoneNumber);
+    return /\b(\d{3}(-\d{3}-|\.\d{3}\.)\d{4})|(\(\d{3}\) \d{3}-\d{4})\b/.test(ostensiblePhoneNumber);
 }
 
 /**
