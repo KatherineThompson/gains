@@ -1,0 +1,23 @@
+{
+  "name": "rest",
+  "version": "1.0.0",
+  "description": "REST exercises",
+  "private": true,
+  "scripts": {
+    "test": "eslint index.js static/*.js",
+    "start": "node index.js"
+  },
+  "author": "Nick Heiner <nth23@cornell.edu>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^3.4.0"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.1",
+    "bunyan-format": "^0.2.1",
+    "koa": "^1.2.2",
+    "koa-bodyparser": "^2.2.0",
+    "koa-bunyan": "0.0.2",
+    "koa-static": "^2.0.0"
+  }
+}

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>REST Exercises</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+        <script src="index.js"></script>
+    </head>
+    <body ng-app="list-maker" ng-controller="RootCtrl">
+        <div class="row">
+            <h1>Woo List Maker</h1>
+            <ul>
+                <li ng-repeat="item in items">
+                    <span ng-hide="item.beingEdited" ng-click="item.beingEdited = true">{{item.name}}</span> 
+                    <div ng-show="item.beingEdited">
+                        <input ng-model="item.name" />
+                        <button class="button" ng-click="renameItem(item.id, item.name); item.beingEdited = false">Save</button>
+                    </div>
+                    – <em>Created at {{item.createdAt | date:'shortTime'}}</em> 
+                    <button class="alert button" ng-click="deleteItem(item.id)">X</button>
+                </li>
+            <ul>
+        </div>
+        <form>
+            <div class="row">
+                <div class="small-6 columns">
+                    <label>
+                        New Item
+                        <input ng-model="newItem.name" placeholder="Item 3" />
+                    </label>
+                </div>
+                <div class="small-6 columns">
+                    <button ng-click="addItem(newItem.name)" class="button">Add Item</button>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
