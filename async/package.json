@@ -1,0 +1,21 @@
+{
+  "name": "async",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "babel --out-dir build index.js",
+    "start": "node build/index.js",
+    "full-run": "npm run build && npm start"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.1",
+    "bunyan-format": "^0.2.1",
+    "lodash": "^4.15.0",
+    "regenerator-runtime": "^0.9.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-plugin-transform-async-to-generator": "^6.8.0",
+    "babel-preset-es2017": "^6.14.0"
+  }
+}
