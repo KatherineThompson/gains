@@ -11,6 +11,8 @@ pass. If the tests pass, then you can consider the problem complete.
 Initially, all tests will fail, and as you fill in the funtions,
 you'll see them turn green as they pass.
 
+Do not worry about how the tests work for now.
+
 ## Usage
 
 On the command line, execute the following to get the dependencies:

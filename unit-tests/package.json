@@ -1,0 +1,14 @@
+{
+  "name": "unit-tests",
+  "private": true,
+  "version": "1.0.0-0",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "tap-difflet": "^0.4.0",
+    "tape": "^4.4.0"
+  },
+  "scripts": {
+    "test": "tape *.tap.js | tap-difflet && mocha *.mocha.js"
+  }
+}
