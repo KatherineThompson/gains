@@ -1,5 +1,5 @@
 {
-  "name": "async",
+  "name": "async-exercise",
   "private": true,
   "version": "1.0.0",
   "scripts": {
@@ -8,6 +8,7 @@
     "full-run": "npm run build && npm start"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "bunyan": "^1.8.1",
     "bunyan-format": "^0.2.1",
     "lodash": "^4.15.0",
